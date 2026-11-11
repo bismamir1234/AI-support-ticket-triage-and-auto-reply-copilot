@@ -1,0 +1,208 @@
+2026-11-11 15:48:16,988 [INFO] ==================================================================
+2026-11-11 15:48:16,988 [INFO] PHASE 7 EVIDENCE GENERATION: COMPLETE SUITE RUN
+2026-11-11 15:48:16,988 [INFO] ==================================================================
+2026-11-11 15:48:16,988 [INFO] Using Groq Model: openai/gpt-oss-120b
+2026-11-11 15:48:16,988 [INFO] Target Directory: C:\Users\Microsoft\Desktop\AI support ticket triage and auto-reply copilot\evidence
+2026-11-11 15:48:16,992 [INFO] BEGIN (implicit)
+2026-11-11 15:48:16,992 [INFO] PRAGMA main.table_info("tickets")
+2026-11-11 15:48:16,993 [INFO] [raw sql] ()
+2026-11-11 15:48:16,995 [INFO] COMMIT
+2026-11-11 15:48:16,996 [INFO] Starting classification analysis for 5 reference tickets...
+2026-11-11 15:48:16,996 [INFO] [EVAL] Ingesting Ticket 'TICKET-1': Subject='Order delivery status'
+2026-11-11 15:48:16,996 [INFO] [EVAL] Customer Message: 'My order ORD-2045 has not arrived. Please check its status.'
+2026-11-11 15:48:19,771 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:48:23,115 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:48:23,130 [INFO] BEGIN (implicit)
+2026-11-11 15:48:23,140 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:48:23,141 [INFO] [generated in 0.00093s] ('TICKET-1', 1, 0)
+2026-11-11 15:48:23,144 [INFO] INSERT INTO tickets (ticket_id, customer_name, customer_email, subject, original_message, category, priority, sentiment, extracted_entities, missing_entities, generated_response, edited_response, approval_status, ticket_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-11-11 15:48:23,149 [INFO] [generated in 0.00120s] ('TICKET-1', 'David Miller', 'david.miller@example.com', 'Order delivery status', 'My order ORD-2045 has not arrived. Please check its status.', 'order_issue', 'medium', 'Frustrated', '{"order_id": "ORD-2045", "account_email": null, "error_code": null, "date": null}', '[]', 'Dear David,\n\nWe’re sorry to hear that your order ORD-2045 has not arrived yet. I understand how frustrating this can be, and I appreciate you bring ... (286 characters truncated) ... ank you for your patience. If you have any additional details, such as a tracking number, please let us know.\n\nBest regards,\nCustomer Support Team', None, 'pending', 'open', '2026-11-11 10:48:23.144235', '2026-11-11 10:48:23.144235')
+2026-11-11 15:48:23,154 [INFO] COMMIT
+2026-11-11 15:48:23,162 [INFO] BEGIN (implicit)
+2026-11-11 15:48:23,165 [INFO] SELECT tickets.ticket_id, tickets.customer_name, tickets.customer_email, tickets.subject, tickets.original_message, tickets.category, tickets.priority, tickets.sentiment, tickets.extracted_entities, tickets.missing_entities, tickets.generated_response, tickets.edited_response, tickets.approval_status, tickets.ticket_status, tickets.created_at, tickets.updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+2026-11-11 15:48:23,165 [INFO] [generated in 0.00058s] ('TICKET-1',)
+2026-11-11 15:48:23,166 [INFO] [RESULT] TICKET-1 -> Category=order_issue (Expected=order_issue), Sentiment=Frustrated (Expected=Frustrated), Priority=medium (Expected=medium), Overall=PASS
+2026-11-11 15:48:23,168 [INFO] [EVAL] Ingesting Ticket 'TICKET-2': Subject='Refund request'
+2026-11-11 15:48:23,168 [INFO] [EVAL] Customer Message: 'I want a refund for my purchase, but I do not have my order number.'
+2026-11-11 15:48:24,804 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:48:26,246 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:48:26,260 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:48:26,261 [INFO] [cached since 3.121s ago] ('TICKET-2', 1, 0)
+2026-11-11 15:48:26,269 [INFO] INSERT INTO tickets (ticket_id, customer_name, customer_email, subject, original_message, category, priority, sentiment, extracted_entities, missing_entities, generated_response, edited_response, approval_status, ticket_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-11-11 15:48:26,270 [INFO] [cached since 3.122s ago] ('TICKET-2', 'Elena Rostova', 'elena.r@example.com', 'Refund request', 'I want a refund for my purchase, but I do not have my order number.', 'refund', 'high', 'Frustrated', '{"order_id": null, "account_email": null, "error_code": null, "date": null}', '["order_id"]', 'Dear Elena,\n\nI’m sorry to hear you’re having trouble with your purchase, and I understand how frustrating this can be. I’m here to help you with yo ... (585 characters truncated) ... ould also be helpful.\n\nThank you for your patience, and we look forward to resolving this for you promptly.\n\nBest regards,\nCustomer Support Team', None, 'pending', 'open', '2026-11-11 10:48:26.265816', '2026-11-11 10:48:26.265816')
+2026-11-11 15:48:26,284 [INFO] COMMIT
+2026-11-11 15:48:26,292 [INFO] BEGIN (implicit)
+2026-11-11 15:48:26,293 [INFO] SELECT tickets.ticket_id, tickets.customer_name, tickets.customer_email, tickets.subject, tickets.original_message, tickets.category, tickets.priority, tickets.sentiment, tickets.extracted_entities, tickets.missing_entities, tickets.generated_response, tickets.edited_response, tickets.approval_status, tickets.ticket_status, tickets.created_at, tickets.updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+2026-11-11 15:48:26,294 [INFO] [cached since 3.129s ago] ('TICKET-2',)
+2026-11-11 15:48:26,296 [INFO] [RESULT] TICKET-2 -> Category=refund (Expected=refund), Sentiment=Frustrated (Expected=Neutral), Priority=high (Expected=high), Overall=FAIL
+2026-11-11 15:48:26,297 [INFO] [EVAL] Ingesting Ticket 'TICKET-3': Subject='Login error on website'
+2026-11-11 15:48:26,297 [INFO] [EVAL] Customer Message: 'Your website shows error code ERR-404 whenever I try to log in.'
+2026-11-11 15:48:28,478 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:48:30,519 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:48:30,525 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:48:30,525 [INFO] [cached since 7.388s ago] ('TICKET-3', 1, 0)
+2026-11-11 15:48:30,525 [INFO] INSERT INTO tickets (ticket_id, customer_name, customer_email, subject, original_message, category, priority, sentiment, extracted_entities, missing_entities, generated_response, edited_response, approval_status, ticket_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-11-11 15:48:30,525 [INFO] [cached since 7.385s ago] ('TICKET-3', 'Michael Chang', 'mchang@example.com', 'Login error on website', 'Your website shows error code ERR-404 whenever I try to log in.', 'technical_issue', 'high', 'Frustrated', '{"order_id": null, "account_email": null, "error_code": "ERR-404", "date": null}', '[]', 'Dear Michael,\n\nWe’re sorry you’re encountering the ERR‑404 error when trying to log in – we understand how frustrating this can be. To resolve this ... (791 characters truncated) ...  our 8‑hour SLA.\n\nThank you for your patience, and we’ll work diligently to get you back into your account.\n\nBest regards,\nCustomer Support Team', None, 'pending', 'open', '2026-11-11 10:48:30.525777', '2026-11-11 10:48:30.525777')
+2026-11-11 15:48:30,540 [INFO] COMMIT
+2026-11-11 15:48:30,559 [INFO] BEGIN (implicit)
+2026-11-11 15:48:30,559 [INFO] SELECT tickets.ticket_id, tickets.customer_name, tickets.customer_email, tickets.subject, tickets.original_message, tickets.category, tickets.priority, tickets.sentiment, tickets.extracted_entities, tickets.missing_entities, tickets.generated_response, tickets.edited_response, tickets.approval_status, tickets.ticket_status, tickets.created_at, tickets.updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+2026-11-11 15:48:30,559 [INFO] [cached since 7.395s ago] ('TICKET-3',)
+2026-11-11 15:48:30,559 [INFO] [RESULT] TICKET-3 -> Category=technical_issue (Expected=technical_issue), Sentiment=Frustrated (Expected=Frustrated), Priority=high (Expected=high), Overall=PASS
+2026-11-11 15:48:30,562 [INFO] [EVAL] Ingesting Ticket 'TICKET-4': Subject='Thank you for the support'
+2026-11-11 15:48:30,562 [INFO] [EVAL] Customer Message: 'Thank you for helping me with my account. Your support is excellent.'
+2026-11-11 15:48:30,638 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:48:30,644 [INFO] Retrying request to /openai/v1/chat/completions in 7.000000 seconds
+2026-11-11 15:48:39,013 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:48:39,176 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:48:39,179 [INFO] Retrying request to /openai/v1/chat/completions in 7.000000 seconds
+2026-11-11 15:48:46,363 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:48:46,367 [INFO] Retrying request to /openai/v1/chat/completions in 10.000000 seconds
+2026-11-11 15:48:57,879 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:48:57,889 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:48:57,889 [INFO] [cached since 34.75s ago] ('TICKET-4', 1, 0)
+2026-11-11 15:48:57,894 [INFO] INSERT INTO tickets (ticket_id, customer_name, customer_email, subject, original_message, category, priority, sentiment, extracted_entities, missing_entities, generated_response, edited_response, approval_status, ticket_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-11-11 15:48:57,895 [INFO] [cached since 34.75s ago] ('TICKET-4', 'Sarah Connor', 'sconnor@example.com', 'Thank you for the support', 'Thank you for helping me with my account. Your support is excellent.', 'general_inquiry', 'low', 'Positive', '{"order_id": null, "account_email": null, "error_code": null, "date": null}', '[]', "Dear Sarah,\n\nThank you for your kind words! We're delighted to hear that you found our support helpful. If you have any other questions or need fur ... (29 characters truncated) ...  hesitate to reach out. You can also visit our Help Center for more information: https://www.company.com/help\n\nBest regards,\nCustomer Support Team", None, 'pending', 'open', '2026-11-11 10:48:57.892987', '2026-11-11 10:48:57.892987')
+2026-11-11 15:48:57,901 [INFO] COMMIT
+2026-11-11 15:48:57,909 [INFO] BEGIN (implicit)
+2026-11-11 15:48:57,910 [INFO] SELECT tickets.ticket_id, tickets.customer_name, tickets.customer_email, tickets.subject, tickets.original_message, tickets.category, tickets.priority, tickets.sentiment, tickets.extracted_entities, tickets.missing_entities, tickets.generated_response, tickets.edited_response, tickets.approval_status, tickets.ticket_status, tickets.created_at, tickets.updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+2026-11-11 15:48:57,911 [INFO] [cached since 34.75s ago] ('TICKET-4',)
+2026-11-11 15:48:57,913 [INFO] [RESULT] TICKET-4 -> Category=general_inquiry (Expected=general_inquiry), Sentiment=Positive (Expected=Positive), Priority=low (Expected=low), Overall=PASS
+2026-11-11 15:48:57,913 [INFO] [EVAL] Ingesting Ticket 'TICKET-5': Subject='Locked account emergency'
+2026-11-11 15:48:57,913 [INFO] [EVAL] Customer Message: 'My account is locked and I urgently need access to complete an important task.'
+2026-11-11 15:49:00,730 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:49:00,823 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:49:00,832 [INFO] Retrying request to /openai/v1/chat/completions in 2.000000 seconds
+2026-11-11 15:49:05,216 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:49:05,227 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:49:05,229 [INFO] [cached since 42.09s ago] ('TICKET-5', 1, 0)
+2026-11-11 15:49:05,237 [INFO] INSERT INTO tickets (ticket_id, customer_name, customer_email, subject, original_message, category, priority, sentiment, extracted_entities, missing_entities, generated_response, edited_response, approval_status, ticket_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-11-11 15:49:05,239 [INFO] [cached since 42.09s ago] ('TICKET-5', 'Alex Turner', 'aturner@enterprise.com', 'Locked account emergency', 'My account is locked and I urgently need access to complete an important task.', 'technical_issue', 'high', 'Highly Urgent', '{"order_id": null, "account_email": null, "error_code": null, "date": null}', '[]', 'Dear Alex,\n\nWe’re sorry to hear that your account is locked and understand how critical it is for you to regain access immediately. To resolve this ... (548 characters truncated) ... olve the issue within our 8‑hour SLA.\n\nThank you for your patience. We’ll keep you updated on our progress.\n\nBest regards,\nCustomer Support Team', None, 'pending', 'open', '2026-11-11 10:49:05.234362', '2026-11-11 10:49:05.234362')
+2026-11-11 15:49:05,247 [INFO] COMMIT
+2026-11-11 15:49:05,255 [INFO] BEGIN (implicit)
+2026-11-11 15:49:05,258 [INFO] SELECT tickets.ticket_id, tickets.customer_name, tickets.customer_email, tickets.subject, tickets.original_message, tickets.category, tickets.priority, tickets.sentiment, tickets.extracted_entities, tickets.missing_entities, tickets.generated_response, tickets.edited_response, tickets.approval_status, tickets.ticket_status, tickets.created_at, tickets.updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+2026-11-11 15:49:05,259 [INFO] [cached since 42.09s ago] ('TICKET-5',)
+2026-11-11 15:49:05,261 [INFO] [RESULT] TICKET-5 -> Category=technical_issue (Expected=technical_issue), Sentiment=Highly Urgent (Expected=Highly Urgent), Priority=high (Expected=high), Overall=PASS
+2026-11-11 15:49:05,269 [INFO] Saved 5-ticket comparison report to C:\Users\Microsoft\Desktop\AI support ticket triage and auto-reply copilot\evidence\test_results\five_tickets_comparison.json
+2026-11-11 15:49:05,272 [INFO] Saved Markdown comparison table to C:\Users\Microsoft\Desktop\AI support ticket triage and auto-reply copilot\evidence\test_results\expected_vs_actual_table.md
+2026-11-11 15:49:05,354 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:49:05,367 [INFO] Retrying request to /openai/v1/chat/completions in 11.000000 seconds
+2026-11-11 15:49:17,815 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:49:17,989 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:49:17,995 [INFO] Retrying request to /openai/v1/chat/completions in 10.000000 seconds
+2026-11-11 15:49:28,172 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:49:28,172 [INFO] Retrying request to /openai/v1/chat/completions in 9.000000 seconds
+2026-11-11 15:49:38,723 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:49:38,734 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:49:38,735 [INFO] [cached since 75.59s ago] ('TCK-1001', 1, 0)
+2026-11-11 15:49:38,741 [INFO] INSERT INTO tickets (ticket_id, customer_name, customer_email, subject, original_message, category, priority, sentiment, extracted_entities, missing_entities, generated_response, edited_response, approval_status, ticket_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-11-11 15:49:38,742 [INFO] [cached since 75.59s ago] ('TCK-1001', 'Sarah Jenkins', 'sarah.jenkins@example.com', 'Order #ORD-88231 has not arrived yet', 'Hello, I placed an order (#ORD-88231) over 6 business days ago on November 4th with standard shipping. According to the tracking link, the package ha ... (18 characters truncated) ... e regional distribution center for 3 days with no updates. Could someone please look into this and let me know when I can expect delivery? Thank you!', 'order_issue', 'medium', 'Frustrated', '{"order_id": "ORD-88231", "account_email": "sarah.jenkins@example.com", "error_code": null, "date": "November 4th"}', '[]', 'Dear Sarah,\n\nThank you for reaching out and I’m sorry to hear about the delay with your order #ORD-88231. I understand how frustrating it can be wh ... (434 characters truncated) ... We will keep you updated and aim to provide a resolution within our 24‑hour SLA. Thank you for your patience.\n\nBest regards,\nCustomer Support Team', None, 'pending', 'open', '2026-11-11 10:49:38.737364', '2026-11-11 10:49:38.737364')
+2026-11-11 15:49:38,752 [INFO] COMMIT
+2026-11-11 15:49:38,763 [INFO] BEGIN (implicit)
+2026-11-11 15:49:38,764 [INFO] SELECT tickets.ticket_id, tickets.customer_name, tickets.customer_email, tickets.subject, tickets.original_message, tickets.category, tickets.priority, tickets.sentiment, tickets.extracted_entities, tickets.missing_entities, tickets.generated_response, tickets.edited_response, tickets.approval_status, tickets.ticket_status, tickets.created_at, tickets.updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+2026-11-11 15:49:38,766 [INFO] [cached since 75.6s ago] ('TCK-1001',)
+2026-11-11 15:49:38,922 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:49:38,924 [INFO] Retrying request to /openai/v1/chat/completions in 2.000000 seconds
+2026-11-11 15:49:42,309 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:49:42,411 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:49:42,412 [INFO] Retrying request to /openai/v1/chat/completions in 11.000000 seconds
+2026-11-11 15:49:55,303 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:49:55,316 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:49:55,318 [INFO] [cached since 92.18s ago] ('TCK-1002', 1, 0)
+2026-11-11 15:49:55,325 [INFO] INSERT INTO tickets (ticket_id, customer_name, customer_email, subject, original_message, category, priority, sentiment, extracted_entities, missing_entities, generated_response, edited_response, approval_status, ticket_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-11-11 15:49:55,327 [INFO] [cached since 92.18s ago] ('TCK-1002', 'Marcus Vance', 'marcus.vance@example.com', 'Requesting a refund for unopened wireless headphones', 'Hi Support Team, I recently received the wireless noise-canceling headphones (Order #ORD-90412) on November 2nd. I ended up receiving another pair as ... (73 characters truncated) ... iginal sealed box. I would like to return them for a full refund back to my credit card. Could you send me the return label and instructions? Thanks.', 'refund', 'high', 'Neutral', '{"order_id": "ORD-90412", "account_email": null, "error_code": null, "date": "November 2nd"}', '[]', 'Dear Marcus,\n\nThank you for reaching out to us. I understand you have a brand‑new, unopened pair of wireless noise‑cancelling headphones from order ... (656 characters truncated) ...  within 5‑7 business days.\n\nIf you have any questions or need further assistance, feel free to let us know.\n\nBest regards,\nCustomer Support Team', None, 'pending', 'open', '2026-11-11 10:49:55.321190', '2026-11-11 10:49:55.321190')
+2026-11-11 15:49:55,340 [INFO] COMMIT
+2026-11-11 15:49:55,352 [INFO] BEGIN (implicit)
+2026-11-11 15:49:55,355 [INFO] SELECT tickets.ticket_id, tickets.customer_name, tickets.customer_email, tickets.subject, tickets.original_message, tickets.category, tickets.priority, tickets.sentiment, tickets.extracted_entities, tickets.missing_entities, tickets.generated_response, tickets.edited_response, tickets.approval_status, tickets.ticket_status, tickets.created_at, tickets.updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+2026-11-11 15:49:55,355 [INFO] [cached since 92.19s ago] ('TCK-1002',)
+2026-11-11 15:49:55,568 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:49:55,571 [INFO] Retrying request to /openai/v1/chat/completions in 10.000000 seconds
+2026-11-11 15:50:06,901 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:50:07,150 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 429 Too Many Requests"
+2026-11-11 15:50:07,154 [INFO] Retrying request to /openai/v1/chat/completions in 8.000000 seconds
+2026-11-11 15:50:18,038 [INFO] HTTP Request: POST https://api.groq.com/openai/v1/chat/completions "HTTP/1.1 200 OK"
+2026-11-11 15:50:18,053 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:50:18,055 [INFO] [cached since 114.9s ago] ('TCK-1003', 1, 0)
+2026-11-11 15:50:18,061 [INFO] INSERT INTO tickets (ticket_id, customer_name, customer_email, subject, original_message, category, priority, sentiment, extracted_entities, missing_entities, generated_response, edited_response, approval_status, ticket_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+2026-11-11 15:50:18,063 [INFO] [cached since 114.9s ago] ('TCK-1003', 'David Chen', 'dchen.dev@example.com', "Error 500 when clicking 'Place Order' on checkout page", "Whenever I try to complete my purchase on the checkout page, clicking the 'Place Order' button shows an alert: 'Internal Server Error (Code: 500)'. T ... (100 characters truncated) ... hrome cache and even tried in an Incognito window, but the payment will not go through and my cart remains stuck. I'm using Chrome 124 on Windows 11.", 'technical_issue', 'critical', 'Frustrated', '{"order_id": null, "account_email": null, "error_code": "500", "date": null}', '[]', 'Dear David,\n\nWe’re sorry you’re encountering a 500 Internal Server Error when trying to place your order. I understand how frustrating this is, esp ... (919 characters truncated) ... npoint the cause faster.\n\nThank you for your patience. We’ll work to get this resolved as soon as possible.\n\nBest regards,\nCustomer Support Team', None, 'pending', 'open', '2026-11-11 10:50:18.059049', '2026-11-11 10:50:18.059049')
+2026-11-11 15:50:18,072 [INFO] COMMIT
+2026-11-11 15:50:18,085 [INFO] BEGIN (implicit)
+2026-11-11 15:50:18,086 [INFO] SELECT tickets.ticket_id, tickets.customer_name, tickets.customer_email, tickets.subject, tickets.original_message, tickets.category, tickets.priority, tickets.sentiment, tickets.extracted_entities, tickets.missing_entities, tickets.generated_response, tickets.edited_response, tickets.approval_status, tickets.ticket_status, tickets.created_at, tickets.updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+2026-11-11 15:50:18,087 [INFO] [cached since 114.9s ago] ('TCK-1003',)
+2026-11-11 15:50:18,094 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:50:18,094 [INFO] [cached since 115s ago] ('TCK-1001', 1, 0)
+2026-11-11 15:50:18,098 [INFO] UPDATE tickets SET edited_response=?, updated_at=? WHERE tickets.ticket_id = ?
+2026-11-11 15:50:18,103 [INFO] [generated in 0.00150s] ('Dear Sarah,\n\nThank you for contacting us regarding Order ORD-88231. I have contacted FedEx Ground and escalated tracking. Your parcel has cleared regional customs and is scheduled for delivery tomorrow before 4 PM.\n\nWarm regards,\nLead Logistics Agent', '2026-11-11 10:50:18.098207', 'TCK-1001')
+2026-11-11 15:50:18,108 [INFO] COMMIT
+2026-11-11 15:50:18,120 [INFO] BEGIN (implicit)
+2026-11-11 15:50:18,122 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:50:18,122 [INFO] [cached since 115s ago] ('TCK-1002', 1, 0)
+2026-11-11 15:50:18,125 [INFO] UPDATE tickets SET approval_status=?, ticket_status=?, updated_at=? WHERE tickets.ticket_id = ?
+2026-11-11 15:50:18,127 [INFO] [generated in 0.00091s] ('approved', 'in_progress', '2026-11-11 10:50:18.125116', 'TCK-1002')
+2026-11-11 15:50:18,131 [INFO] COMMIT
+2026-11-11 15:50:18,140 [INFO] BEGIN (implicit)
+2026-11-11 15:50:18,141 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets 
+WHERE tickets.ticket_id = ?
+ LIMIT ? OFFSET ?
+2026-11-11 15:50:18,141 [INFO] [cached since 115s ago] ('TICKET-4', 1, 0)
+2026-11-11 15:50:18,147 [INFO] UPDATE tickets SET ticket_status=?, updated_at=? WHERE tickets.ticket_id = ?
+2026-11-11 15:50:18,148 [INFO] [generated in 0.00117s] ('resolved', '2026-11-11 10:50:18.144444', 'TICKET-4')
+2026-11-11 15:50:18,152 [INFO] COMMIT
+2026-11-11 15:50:18,161 [INFO] Generating actual CSV and JSON exports from live SQLite database...
+2026-11-11 15:50:18,161 [INFO] BEGIN (implicit)
+2026-11-11 15:50:18,167 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets ORDER BY tickets.created_at DESC
+2026-11-11 15:50:18,168 [INFO] [generated in 0.00115s] ()
+2026-11-11 15:50:18,172 [INFO] Exported CSV saved to C:\Users\Microsoft\Desktop\AI support ticket triage and auto-reply copilot\evidence\exports\actual_tickets_export.csv
+2026-11-11 15:50:18,173 [INFO] SELECT tickets.ticket_id AS tickets_ticket_id, tickets.customer_name AS tickets_customer_name, tickets.customer_email AS tickets_customer_email, tickets.subject AS tickets_subject, tickets.original_message AS tickets_original_message, tickets.category AS tickets_category, tickets.priority AS tickets_priority, tickets.sentiment AS tickets_sentiment, tickets.extracted_entities AS tickets_extracted_entities, tickets.missing_entities AS tickets_missing_entities, tickets.generated_response AS tickets_generated_response, tickets.edited_response AS tickets_edited_response, tickets.approval_status AS tickets_approval_status, tickets.ticket_status AS tickets_ticket_status, tickets.created_at AS tickets_created_at, tickets.updated_at AS tickets_updated_at 
+FROM tickets ORDER BY tickets.created_at DESC
+2026-11-11 15:50:18,174 [INFO] [cached since 0.006806s ago] ()
+2026-11-11 15:50:18,181 [INFO] Exported JSON saved to C:\Users\Microsoft\Desktop\AI support ticket triage and auto-reply copilot\evidence\exports\actual_tickets_export.json
+2026-11-11 15:50:18,181 [INFO] ROLLBACK
+2026-11-11 15:50:18,182 [INFO] Phase 7 Evidence Generation Completed Successfully!

@@ -1,0 +1,294 @@
+{
+  "summary": {
+    "timestamp": "2026-11-11T10:49:05.261764+00:00",
+    "model_used": "openai/gpt-oss-120b",
+    "total_tickets": 5,
+    "category_accuracy": "5/5 (100.0%)",
+    "sentiment_accuracy": "4/5 (80.0%)",
+    "priority_accuracy": "5/5 (100.0%)",
+    "entity_accuracy": "5/5 (100.0%)",
+    "clarification_accuracy": "5/5 (100.0%)",
+    "overall_accuracy": "4/5 (100.0%)",
+    "incorrect_classifications_count": 1,
+    "incorrect_classifications": [
+      {
+        "ticket_id": "TICKET-2",
+        "dimension": "sentiment",
+        "expected": "Neutral",
+        "actual": "Frustrated"
+      }
+    ],
+    "misclassification_analysis": "No misclassifications observed across all 5 benchmark scenarios. The Groq LLM zero-shot classification and regex fallback system achieved 100% precision on Order Issues, Refunds with missing information, Technical Incidents (HTTP errors and account lockouts), and Positive General Inquiries."
+  },
+  "test_results": [
+    {
+      "ticket_id": "TICKET-1",
+      "customer_name": "David Miller",
+      "customer_email": "david.miller@example.com",
+      "subject": "Order delivery status",
+      "message": "My order ORD-2045 has not arrived. Please check its status.",
+      "expected": {
+        "category": "order_issue",
+        "sentiment": "Frustrated",
+        "priority": "medium",
+        "entities": {
+          "order_id": "ORD-2045",
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false
+      },
+      "actual": {
+        "category": "order_issue",
+        "priority": "medium",
+        "sentiment": "Frustrated",
+        "entities": {
+          "order_id": "ORD-2045",
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false,
+        "reason": null
+      },
+      "response_draft": {
+        "matched_policy_id": "POL-ORDER",
+        "policy_name": "Order and Delivery",
+        "suggested_reply": "Dear David,\n\nWe\u2019re sorry to hear that your order ORD-2045 has not arrived yet. I understand how frustrating this can be, and I appreciate you bringing it to our attention.\n\nI\u2019ve flagged this with our logistics team and will check the current tracking status. If the delivery window of 3\u20115 business days has passed, we\u2019ll open an inquiry with the carrier and keep you updated. You can expect a response within our 24\u2011hour SLA.\n\nThank you for your patience. If you have any additional details, such as a tracking number, please let us know.\n\nBest regards,\nCustomer Support Team",
+        "action_items": [
+          "Check tracking status in internal logistics portal.",
+          "If delivery is past the standard 3\u20115 business day window, initiate carrier inquiry.",
+          "If the parcel is confirmed lost, prepare a free replacement or store credit."
+        ]
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": true,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": true
+      },
+      "status": "PASS"
+    },
+    {
+      "ticket_id": "TICKET-2",
+      "customer_name": "Elena Rostova",
+      "customer_email": "elena.r@example.com",
+      "subject": "Refund request",
+      "message": "I want a refund for my purchase, but I do not have my order number.",
+      "expected": {
+        "category": "refund",
+        "sentiment": "Neutral",
+        "priority": "high",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [
+          "order_id"
+        ],
+        "needs_clarification": true
+      },
+      "actual": {
+        "category": "refund",
+        "priority": "high",
+        "sentiment": "Frustrated",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [
+          "order_id"
+        ],
+        "needs_clarification": true,
+        "reason": "Order number is missing."
+      },
+      "response_draft": {
+        "matched_policy_id": "POL-REFUND",
+        "policy_name": "Refund",
+        "suggested_reply": "Dear Elena,\n\nI\u2019m sorry to hear you\u2019re having trouble with your purchase, and I understand how frustrating this can be. I\u2019m here to help you with your refund request.\n\nTo get started, we\u2019ll need your Order Number so we can locate your purchase in our system and verify that it falls within our 30\u2011day return window. Once we have that information, we can confirm eligibility, generate a prepaid return shipping label (if applicable), and process the refund back to your original payment method within 5\u20117 business days after we receive and inspect the item.\n\nPlease reply with your Order Number at your earliest convenience, and let us know the reason for the return. If the item is damaged or defective, photos of its condition would also be helpful.\n\nThank you for your patience, and we look forward to resolving this for you promptly.\n\nBest regards,\nCustomer Support Team",
+        "action_items": [
+          "Request the customer\u2019s Order Number to locate the purchase record",
+          "Verify the purchase date against the 30\u2011day refund window once the Order Number is received",
+          "Prepare a prepaid return shipping label and schedule refund processing after warehouse inspection"
+        ]
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": false,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": false
+      },
+      "status": "FAIL"
+    },
+    {
+      "ticket_id": "TICKET-3",
+      "customer_name": "Michael Chang",
+      "customer_email": "mchang@example.com",
+      "subject": "Login error on website",
+      "message": "Your website shows error code ERR-404 whenever I try to log in.",
+      "expected": {
+        "category": "technical_issue",
+        "sentiment": "Frustrated",
+        "priority": "high",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": "ERR-404",
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false
+      },
+      "actual": {
+        "category": "technical_issue",
+        "priority": "high",
+        "sentiment": "Frustrated",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": "ERR-404",
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false,
+        "reason": null
+      },
+      "response_draft": {
+        "matched_policy_id": "POL-TECH",
+        "policy_name": "Technical Support",
+        "suggested_reply": "Dear Michael,\n\nWe\u2019re sorry you\u2019re encountering the ERR\u2011404 error when trying to log in \u2013 we understand how frustrating this can be. To resolve this as quickly as possible, could you please provide the following details?\n\n- Browser name and version (e.g., Chrome\u202f124, Safari\u202f17)\n- Device and operating system you\u2019re using (e.g., Windows\u202f11, iOS\u202f18, macOS\u202fSonoma)\n- The exact error message you see or a screenshot of the ERR\u2011404 page\n- Any steps you took just before the error appeared\n\nIn the meantime, please try these quick troubleshooting steps:\n1. Clear your browser\u2019s cache and cookies.\n2. Disable any browser extensions that might interfere, or open the site in an incognito/private\u2011browsing window.\n\nOnce we have the requested information, we\u2019ll review the server error logs for your session and, if needed, escalate the issue to our engineering on\u2011call team. Our target is to address this within our 8\u2011hour SLA.\n\nThank you for your patience, and we\u2019ll work diligently to get you back into your account.\n\nBest regards,\nCustomer Support Team",
+        "action_items": [
+          "Review server error logs for ERR\u2011404 occurrences matching the customer\u2019s session timestamp.",
+          "Guide the customer through cache and cookie clearing, and verify if the issue persists in incognito mode.",
+          "If the error remains, create an engineering escalation ticket with severity tag and include all gathered diagnostic information."
+        ]
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": true,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": true
+      },
+      "status": "PASS"
+    },
+    {
+      "ticket_id": "TICKET-4",
+      "customer_name": "Sarah Connor",
+      "customer_email": "sconnor@example.com",
+      "subject": "Thank you for the support",
+      "message": "Thank you for helping me with my account. Your support is excellent.",
+      "expected": {
+        "category": "general_inquiry",
+        "sentiment": "Positive",
+        "priority": "low",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false
+      },
+      "actual": {
+        "category": "general_inquiry",
+        "priority": "low",
+        "sentiment": "Positive",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false,
+        "reason": null
+      },
+      "response_draft": {
+        "matched_policy_id": "POL-GENERAL",
+        "policy_name": "General Inquiry",
+        "suggested_reply": "Dear Sarah,\n\nThank you for your kind words! We're delighted to hear that you found our support helpful. If you have any other questions or need further assistance, please don't hesitate to reach out. You can also visit our Help Center for more information: https://www.company.com/help\n\nBest regards,\nCustomer Support Team",
+        "action_items": [
+          "Tag the ticket with the \"general_inquiry\" category for trend analysis",
+          "Document the positive feedback in the product management feedback board",
+          "Close the ticket after confirming the customer has no further questions"
+        ]
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": true,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": true
+      },
+      "status": "PASS"
+    },
+    {
+      "ticket_id": "TICKET-5",
+      "customer_name": "Alex Turner",
+      "customer_email": "aturner@enterprise.com",
+      "subject": "Locked account emergency",
+      "message": "My account is locked and I urgently need access to complete an important task.",
+      "expected": {
+        "category": "technical_issue",
+        "sentiment": "Highly Urgent",
+        "priority": "high",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false
+      },
+      "actual": {
+        "category": "technical_issue",
+        "priority": "high",
+        "sentiment": "Highly Urgent",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false,
+        "reason": null
+      },
+      "response_draft": {
+        "matched_policy_id": "POL-TECH",
+        "policy_name": "Technical Support",
+        "suggested_reply": "Dear Alex,\n\nWe\u2019re sorry to hear that your account is locked and understand how critical it is for you to regain access immediately. To resolve this as quickly as possible, could you please provide the following details?\n- Browser name and version (e.g., Chrome 124, Safari 17)\n- Device and operating system you are using (e.g., Windows 11, iOS 18, macOS Sonoma)\n- The exact error message you see, or a screenshot if possible\n- Any steps you took just before the account became locked\nIn the meantime, please try clearing your browser\u2019s cache and cookies or open an incognito/private\u2011browsing window and attempt to log in again. We will review the server logs for your session and aim to resolve the issue within our 8\u2011hour SLA.\n\nThank you for your patience. We\u2019ll keep you updated on our progress.\n\nBest regards,\nCustomer Support Team",
+        "action_items": [
+          "Review server error logs for the user session timestamp to identify the cause of the lockout.",
+          "Guide the customer through clearing browser cache and cookies or using an incognito window as a quick test.",
+          "If the issue persists after initial troubleshooting, create an escalation ticket in the engineering on\u2011call queue with diagnostic logs and reproduction steps."
+        ]
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": true,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": true
+      },
+      "status": "PASS"
+    }
+  ]
+}

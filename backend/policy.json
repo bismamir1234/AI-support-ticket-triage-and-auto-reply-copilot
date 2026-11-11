@@ -1,0 +1,105 @@
+[
+  {
+    "id": "POL-ORDER",
+    "name": "Order and Delivery",
+    "category": "Order and Delivery",
+    "description": "Guidelines for resolving order status, shipping delays, tracking updates, and missing or damaged packages.",
+    "default_priority": "Medium",
+    "sla_hours": 24,
+    "eligibility_and_rules": [
+      "Standard delivery timeline is 3-5 business days from order fulfillment.",
+      "Express delivery timeline is 1-2 business days.",
+      "If a package is marked 'Delivered' but the customer states it was not received, advise checking secure drop areas, mailrooms, and with neighbors before opening a lost parcel claim.",
+      "Lost parcel claims can be initiated 24 hours after the delivery status timestamp.",
+      "Address changes are only permitted if the order status is 'Processing' and not yet 'Shipped'."
+    ],
+    "required_customer_info": [
+      "Order Number (e.g., ORD-XXXXX)",
+      "Registered Email Address",
+      "Tracking Number (if provided)"
+    ],
+    "resolution_actions": [
+      "Check tracking status in internal logistics portal.",
+      "If delayed past standard delivery date, issue shipping carrier inquiry.",
+      "If lost in transit, offer free replacement or store credit."
+    ],
+    "auto_reply_guidelines": "Acknowledge the delay with empathy, reference the order ID if available, request missing order details if missing, and assure the customer that the logistics team is investigating."
+  },
+  {
+    "id": "POL-REFUND",
+    "name": "Refund",
+    "category": "Refund",
+    "description": "Rules for handling product returns, refund eligibility, cancellations, and billing disputes.",
+    "default_priority": "High",
+    "sla_hours": 12,
+    "eligibility_and_rules": [
+      "Return requests must be submitted within 30 days of item delivery.",
+      "Items must be in original condition, unopened, and in original packaging to qualify for a full refund.",
+      "Digital products, downloadable software, and gift cards are non-refundable once accessed or redeemed.",
+      "Approved refunds are processed back to the original payment method within 5-7 business days.",
+      "Defective or damaged items received by the customer are eligible for a 100% refund or free replacement with shipping fees waived."
+    ],
+    "required_customer_info": [
+      "Order Number",
+      "Reason for return or refund",
+      "Photos of item condition (for damaged/defective items)"
+    ],
+    "resolution_actions": [
+      "Verify purchase date and eligibility against the 30-day window.",
+      "Generate prepaid return shipping label if eligible.",
+      "Trigger refund payout upon receipt and warehouse inspection."
+    ],
+    "auto_reply_guidelines": "Politely acknowledge the refund request, outline the 30-day policy criteria, provide steps to initiate return label generation, and set expectations for the 5-7 business day processing timeline."
+  },
+  {
+    "id": "POL-TECH",
+    "name": "Technical Support",
+    "category": "Technical Support",
+    "description": "Procedures for resolving website errors, account login failures, payment checkout bugs, and platform downtime.",
+    "default_priority": "High",
+    "sla_hours": 8,
+    "eligibility_and_rules": [
+      "Issues blocking checkout or account access are treated as urgent/P1 priority.",
+      "Standard troubleshooting steps (browser cache clearing, disabling conflicting browser extensions, trying incognito mode) should be suggested initially.",
+      "Security-related issues (unauthorized account access, password reset failures) require immediate identity verification before releasing account changes.",
+      "Persistent bugs must be escalated to the engineering on-call team with diagnostic logs and reproduction steps."
+    ],
+    "required_customer_info": [
+      "Browser type and version (e.g., Chrome 124, Safari 17)",
+      "Device and Operating System (e.g., Windows 11, iOS 18, macOS Sonoma)",
+      "Exact error message or screenshot",
+      "Steps taken right before the error occurred"
+    ],
+    "resolution_actions": [
+      "Review server error logs corresponding to the user session timestamp.",
+      "Guide customer through quick cache/cookie clearing steps.",
+      "Escalate unresolved bugs to Jira/engineering queue with severity tag."
+    ],
+    "auto_reply_guidelines": "Apologize for the inconvenience, ask for browser/device specifics and screenshots if not already supplied, suggest clearing cookies/cache as a quick test, and confirm engineering review."
+  },
+  {
+    "id": "POL-GENERAL",
+    "name": "General Inquiry",
+    "category": "General Inquiry",
+    "description": "Handling general questions regarding product availability, store hours, company information, partnerships, and general feedback.",
+    "default_priority": "Low",
+    "sla_hours": 48,
+    "eligibility_and_rules": [
+      "Provide accurate, friendly information based on current public knowledge base and FAQ documents.",
+      "Partnership and vendor inquiries should be routed to business development (partnerships@company.com).",
+      "Product restocking questions should reference estimated restock schedules or invite customer to join email waitlists.",
+      "Feedback and feature suggestions should be documented and forwarded to the product management feedback board."
+    ],
+    "required_customer_info": [
+      "Customer Name",
+      "Inquiry Topic or Product SKU"
+    ],
+    "resolution_actions": [
+      "Answer customer question directly using the knowledge base.",
+      "Tag inquiry with relevant topic category for trend analysis.",
+      "Close ticket once the customer confirms their question was answered."
+    ],
+    "auto_reply_guidelines": "Provide a warm and welcoming response, address the specific question directly, link to the relevant help center article or documentation, and invite follow-up questions."
+  }
+]
+

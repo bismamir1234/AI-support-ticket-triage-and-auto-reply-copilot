@@ -1,0 +1,112 @@
+Ticket ID,Customer,Category,Priority,Sentiment,Missing entities,Status,Final response
+TCK-1003,David Chen <dchen.dev@example.com>,technical_issue,critical,Frustrated,None,open,"Dear David,
+
+We’re sorry you’re encountering a 500 Internal Server Error when trying to place your order. I understand how frustrating this is, especially when you’re ready to complete your purchase.
+
+To help resolve this quickly, please try the following:
+- Clear your browser cookies and cache (you can do this from Chrome Settings → Privacy and security → Clear browsing data, selecting “Cookies and other site data” and “Cached images and files”).
+- Disable any browser extensions that might interfere with the checkout process, then attempt the purchase again.
+- If the issue persists, try using a different browser or a private/incognito window.
+
+In parallel, I’ve begun reviewing the server error logs for the time you experienced the issue and will reproduce the problem on our end. Because this is affecting checkout, we’ve flagged it as a P1 incident and will keep you updated within our 8‑hour SLA.
+
+If you have a screenshot of the error or any additional details about the steps leading up to the failure, please share them. This will help us pinpoint the cause faster.
+
+Thank you for your patience. We’ll work to get this resolved as soon as possible.
+
+Best regards,
+Customer Support Team"
+TCK-1002,Marcus Vance <marcus.vance@example.com>,refund,high,Neutral,None,in_progress,"Dear Marcus,
+
+Thank you for reaching out to us. I understand you have a brand‑new, unopened pair of wireless noise‑cancelling headphones from order ORD-90412 that you’d like to return for a full refund. Since the items were delivered on November 2nd and your request is being made well within our 30‑day return window, your return qualifies for a full refund.
+
+Here’s what will happen next:
+- I will generate a prepaid return shipping label for you and email it shortly.
+- Please pack the headphones in their original sealed box, attach the label, and drop the package off at the nearest carrier location.
+- Once we receive the package and confirm the items are in their original condition, we will process the refund to the original credit‑card payment method. Refunds are typically completed within 5‑7 business days.
+
+If you have any questions or need further assistance, feel free to let us know.
+
+Best regards,
+Customer Support Team"
+TCK-1001,Sarah Jenkins <sarah.jenkins@example.com>,order_issue,medium,Frustrated,None,open,"Dear Sarah,
+
+Thank you for contacting us regarding Order ORD-88231. I have contacted FedEx Ground and escalated tracking. Your parcel has cleared regional customs and is scheduled for delivery tomorrow before 4 PM.
+
+Warm regards,
+Lead Logistics Agent"
+TICKET-5,Alex Turner <aturner@enterprise.com>,technical_issue,high,Highly Urgent,None,open,"Dear Alex,
+
+We’re sorry to hear that your account is locked and understand how critical it is for you to regain access immediately. To resolve this as quickly as possible, could you please provide the following details?
+- Browser name and version (e.g., Chrome 124, Safari 17)
+- Device and operating system you are using (e.g., Windows 11, iOS 18, macOS Sonoma)
+- The exact error message you see, or a screenshot if possible
+- Any steps you took just before the account became locked
+In the meantime, please try clearing your browser’s cache and cookies or open an incognito/private‑browsing window and attempt to log in again. We will review the server logs for your session and aim to resolve the issue within our 8‑hour SLA.
+
+Thank you for your patience. We’ll keep you updated on our progress.
+
+Best regards,
+Customer Support Team"
+TICKET-4,Sarah Connor <sconnor@example.com>,general_inquiry,low,Positive,None,resolved,"Dear Sarah,
+
+Thank you for your kind words! We're delighted to hear that you found our support helpful. If you have any other questions or need further assistance, please don't hesitate to reach out. You can also visit our Help Center for more information: https://www.company.com/help
+
+Best regards,
+Customer Support Team"
+TICKET-3,Michael Chang <mchang@example.com>,technical_issue,high,Frustrated,None,open,"Dear Michael,
+
+We’re sorry you’re encountering the ERR‑404 error when trying to log in – we understand how frustrating this can be. To resolve this as quickly as possible, could you please provide the following details?
+
+- Browser name and version (e.g., Chrome 124, Safari 17)
+- Device and operating system you’re using (e.g., Windows 11, iOS 18, macOS Sonoma)
+- The exact error message you see or a screenshot of the ERR‑404 page
+- Any steps you took just before the error appeared
+
+In the meantime, please try these quick troubleshooting steps:
+1. Clear your browser’s cache and cookies.
+2. Disable any browser extensions that might interfere, or open the site in an incognito/private‑browsing window.
+
+Once we have the requested information, we’ll review the server error logs for your session and, if needed, escalate the issue to our engineering on‑call team. Our target is to address this within our 8‑hour SLA.
+
+Thank you for your patience, and we’ll work diligently to get you back into your account.
+
+Best regards,
+Customer Support Team"
+TICKET-2,Elena Rostova <elena.r@example.com>,refund,high,Frustrated,order_id,open,"Dear Elena,
+
+I’m sorry to hear you’re having trouble with your purchase, and I understand how frustrating this can be. I’m here to help you with your refund request.
+
+To get started, we’ll need your Order Number so we can locate your purchase in our system and verify that it falls within our 30‑day return window. Once we have that information, we can confirm eligibility, generate a prepaid return shipping label (if applicable), and process the refund back to your original payment method within 5‑7 business days after we receive and inspect the item.
+
+Please reply with your Order Number at your earliest convenience, and let us know the reason for the return. If the item is damaged or defective, photos of its condition would also be helpful.
+
+Thank you for your patience, and we look forward to resolving this for you promptly.
+
+Best regards,
+Customer Support Team"
+TICKET-1,David Miller <david.miller@example.com>,order_issue,medium,Frustrated,None,open,"Dear David,
+
+We’re sorry to hear that your order ORD-2045 has not arrived yet. I understand how frustrating this can be, and I appreciate you bringing it to our attention.
+
+I’ve flagged this with our logistics team and will check the current tracking status. If the delivery window of 3‑5 business days has passed, we’ll open an inquiry with the carrier and keep you updated. You can expect a response within our 24‑hour SLA.
+
+Thank you for your patience. If you have any additional details, such as a tracking number, please let us know.
+
+Best regards,
+Customer Support Team"
+P6-CSV-003,Sophia Loren <sophia.l@example.com>,refund,medium,Neutral,order_id,open,"Dear Sophia, the charge has been credited back to your account in full. Thank you."
+P6-APPROVE-002,Daniel Craig <daniel.c@example.com>,order_issue,medium,Frustrated,None,resolved,"Hello Daniel,
+
+We apologize for the fulfillment mistake on Order ORD-44321. A replacement pair of headphones has been expedited to your address at no charge.
+
+Sincerely,
+Support Lead"
+P6-EDIT-001,Eleanor Vance <eleanor.vance@example.com>,order_issue,high,Highly Urgent,None,open,"Dear Eleanor,
+
+We understand how important it is to receive your shipment promptly, and we’re sorry for the inconvenience caused by the missing tracking information for your order ORD-99214. I’ve escalated this to our logistics team, and we’ll check the current status in our system. You can expect an update with the tracking details within our 24‑hour SLA.
+
+Thank you for your patience.
+
+Best regards,
+Customer Support Team"

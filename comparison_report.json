@@ -1,0 +1,225 @@
+{
+  "summary": {
+    "timestamp": "2026-11-11T09:59:16.898678+00:00",
+    "model_used": "openai/gpt-oss-120b",
+    "total_tickets": 5,
+    "category_accuracy": "5/5 (100.0%)",
+    "sentiment_accuracy": "5/5 (100.0%)",
+    "entity_accuracy": "5/5 (100.0%)",
+    "clarification_accuracy": "5/5 (100.0%)",
+    "priority_accuracy": "5/5 (100.0%)",
+    "incorrect_classifications_count": 0,
+    "incorrect_classifications": []
+  },
+  "test_results": [
+    {
+      "ticket_id": "TICKET-1",
+      "subject": "Order delivery status",
+      "message": "My order ORD-2045 has not arrived. Please check its status.",
+      "expected": {
+        "category": "order_issue",
+        "sentiment": "Frustrated",
+        "priority": "medium",
+        "entities": {
+          "order_id": "ORD-2045",
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false
+      },
+      "actual": {
+        "category": "order_issue",
+        "priority": "medium",
+        "sentiment": "Frustrated",
+        "entities": {
+          "order_id": "ORD-2045",
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false,
+        "reason": null
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": true,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": true
+      },
+      "status": "PASS"
+    },
+    {
+      "ticket_id": "TICKET-2",
+      "subject": "Refund request",
+      "message": "I want a refund for my purchase, but I do not have my order number.",
+      "expected": {
+        "category": "refund",
+        "sentiment": "Neutral",
+        "priority": "high",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [
+          "order_id"
+        ],
+        "needs_clarification": true
+      },
+      "actual": {
+        "category": "refund",
+        "priority": "high",
+        "sentiment": "Neutral",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [
+          "order_id"
+        ],
+        "needs_clarification": true,
+        "reason": "Order number is missing."
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": true,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": true
+      },
+      "status": "PASS"
+    },
+    {
+      "ticket_id": "TICKET-3",
+      "subject": "Login error on website",
+      "message": "Your website shows error code ERR-404 whenever I try to log in.",
+      "expected": {
+        "category": "technical_issue",
+        "sentiment": "Frustrated",
+        "priority": "high",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": "ERR-404",
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false
+      },
+      "actual": {
+        "category": "technical_issue",
+        "priority": "high",
+        "sentiment": "Frustrated",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": "ERR-404",
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false,
+        "reason": null
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": true,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": true
+      },
+      "status": "PASS"
+    },
+    {
+      "ticket_id": "TICKET-4",
+      "subject": "Thank you for the support",
+      "message": "Thank you for helping me with my account. Your support is excellent.",
+      "expected": {
+        "category": "general_inquiry",
+        "sentiment": "Positive",
+        "priority": "low",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false
+      },
+      "actual": {
+        "category": "general_inquiry",
+        "priority": "low",
+        "sentiment": "Positive",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false,
+        "reason": null
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": true,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": true
+      },
+      "status": "PASS"
+    },
+    {
+      "ticket_id": "TICKET-5",
+      "subject": "Locked account emergency",
+      "message": "My account is locked and I urgently need access to complete an important task.",
+      "expected": {
+        "category": "technical_issue",
+        "sentiment": "Highly Urgent",
+        "priority": "high",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false
+      },
+      "actual": {
+        "category": "technical_issue",
+        "priority": "high",
+        "sentiment": "Highly Urgent",
+        "entities": {
+          "order_id": null,
+          "account_email": null,
+          "error_code": null,
+          "date": null
+        },
+        "missing_entities": [],
+        "needs_clarification": false,
+        "reason": null
+      },
+      "eval_checks": {
+        "category_match": true,
+        "sentiment_match": true,
+        "priority_match": true,
+        "entity_match": true,
+        "clarification_match": true,
+        "overall_pass": true
+      },
+      "status": "PASS"
+    }
+  ]
+}

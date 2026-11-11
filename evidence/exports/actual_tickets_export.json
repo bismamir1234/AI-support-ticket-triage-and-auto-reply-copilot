@@ -1,0 +1,538 @@
+[
+  {
+    "ticket_id": "TCK-1003",
+    "customer": {
+      "name": "David Chen",
+      "email": "dchen.dev@example.com"
+    },
+    "customer_name": "David Chen",
+    "customer_email": "dchen.dev@example.com",
+    "subject": "Error 500 when clicking 'Place Order' on checkout page",
+    "original_message": "Whenever I try to complete my purchase on the checkout page, clicking the 'Place Order' button shows an alert: 'Internal Server Error (Code: 500)'. The network tab shows a failed POST request to `/api/v1/checkout/process`. I have tried clearing my Chrome cache and even tried in an Incognito window, but the payment will not go through and my cart remains stuck. I'm using Chrome 124 on Windows 11.",
+    "category": "technical_issue",
+    "priority": "critical",
+    "sentiment": "Frustrated",
+    "extracted_entities": {
+      "order_id": null,
+      "account_email": null,
+      "error_code": "500",
+      "date": null
+    },
+    "missing_entities": [],
+    "generated_response": "Dear David,\n\nWe\u2019re sorry you\u2019re encountering a 500 Internal Server Error when trying to place your order. I understand how frustrating this is, especially when you\u2019re ready to complete your purchase.\n\nTo help resolve this quickly, please try the following:\n- Clear your browser cookies and cache (you can do this from Chrome Settings \u2192 Privacy and security \u2192 Clear browsing data, selecting \u201cCookies and other site data\u201d and \u201cCached images and files\u201d).\n- Disable any browser extensions that might interfere with the checkout process, then attempt the purchase again.\n- If the issue persists, try using a different browser or a private/incognito window.\n\nIn parallel, I\u2019ve begun reviewing the server error logs for the time you experienced the issue and will reproduce the problem on our end. Because this is affecting checkout, we\u2019ve flagged it as a P1 incident and will keep you updated within our 8\u2011hour SLA.\n\nIf you have a screenshot of the error or any additional details about the steps leading up to the failure, please share them. This will help us pinpoint the cause faster.\n\nThank you for your patience. We\u2019ll work to get this resolved as soon as possible.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": null,
+    "final_response": "Dear David,\n\nWe\u2019re sorry you\u2019re encountering a 500 Internal Server Error when trying to place your order. I understand how frustrating this is, especially when you\u2019re ready to complete your purchase.\n\nTo help resolve this quickly, please try the following:\n- Clear your browser cookies and cache (you can do this from Chrome Settings \u2192 Privacy and security \u2192 Clear browsing data, selecting \u201cCookies and other site data\u201d and \u201cCached images and files\u201d).\n- Disable any browser extensions that might interfere with the checkout process, then attempt the purchase again.\n- If the issue persists, try using a different browser or a private/incognito window.\n\nIn parallel, I\u2019ve begun reviewing the server error logs for the time you experienced the issue and will reproduce the problem on our end. Because this is affecting checkout, we\u2019ve flagged it as a P1 incident and will keep you updated within our 8\u2011hour SLA.\n\nIf you have a screenshot of the error or any additional details about the steps leading up to the failure, please share them. This will help us pinpoint the cause faster.\n\nThank you for your patience. We\u2019ll work to get this resolved as soon as possible.\n\nBest regards,\nCustomer Support Team",
+    "approval_status": "pending",
+    "ticket_status": "open",
+    "created_at": "2026-11-11T10:50:18.059049",
+    "updated_at": "2026-11-11T10:50:18.059049",
+    "analysis_details": {
+      "category": "technical_issue",
+      "priority": "critical",
+      "sentiment": "Frustrated",
+      "extracted_entities": {
+        "order_id": null,
+        "account_email": null,
+        "error_code": "500",
+        "date": null
+      },
+      "missing_entities": [],
+      "needs_clarification": false
+    },
+    "response_details": {
+      "generated_draft": "Dear David,\n\nWe\u2019re sorry you\u2019re encountering a 500 Internal Server Error when trying to place your order. I understand how frustrating this is, especially when you\u2019re ready to complete your purchase.\n\nTo help resolve this quickly, please try the following:\n- Clear your browser cookies and cache (you can do this from Chrome Settings \u2192 Privacy and security \u2192 Clear browsing data, selecting \u201cCookies and other site data\u201d and \u201cCached images and files\u201d).\n- Disable any browser extensions that might interfere with the checkout process, then attempt the purchase again.\n- If the issue persists, try using a different browser or a private/incognito window.\n\nIn parallel, I\u2019ve begun reviewing the server error logs for the time you experienced the issue and will reproduce the problem on our end. Because this is affecting checkout, we\u2019ve flagged it as a P1 incident and will keep you updated within our 8\u2011hour SLA.\n\nIf you have a screenshot of the error or any additional details about the steps leading up to the failure, please share them. This will help us pinpoint the cause faster.\n\nThank you for your patience. We\u2019ll work to get this resolved as soon as possible.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": null,
+      "final_response": "Dear David,\n\nWe\u2019re sorry you\u2019re encountering a 500 Internal Server Error when trying to place your order. I understand how frustrating this is, especially when you\u2019re ready to complete your purchase.\n\nTo help resolve this quickly, please try the following:\n- Clear your browser cookies and cache (you can do this from Chrome Settings \u2192 Privacy and security \u2192 Clear browsing data, selecting \u201cCookies and other site data\u201d and \u201cCached images and files\u201d).\n- Disable any browser extensions that might interfere with the checkout process, then attempt the purchase again.\n- If the issue persists, try using a different browser or a private/incognito window.\n\nIn parallel, I\u2019ve begun reviewing the server error logs for the time you experienced the issue and will reproduce the problem on our end. Because this is affecting checkout, we\u2019ve flagged it as a P1 incident and will keep you updated within our 8\u2011hour SLA.\n\nIf you have a screenshot of the error or any additional details about the steps leading up to the failure, please share them. This will help us pinpoint the cause faster.\n\nThank you for your patience. We\u2019ll work to get this resolved as soon as possible.\n\nBest regards,\nCustomer Support Team",
+      "approval_status": "pending",
+      "ticket_status": "open"
+    }
+  },
+  {
+    "ticket_id": "TCK-1002",
+    "customer": {
+      "name": "Marcus Vance",
+      "email": "marcus.vance@example.com"
+    },
+    "customer_name": "Marcus Vance",
+    "customer_email": "marcus.vance@example.com",
+    "subject": "Requesting a refund for unopened wireless headphones",
+    "original_message": "Hi Support Team, I recently received the wireless noise-canceling headphones (Order #ORD-90412) on November 2nd. I ended up receiving another pair as a birthday gift, so these are completely brand new, unopened in their original sealed box. I would like to return them for a full refund back to my credit card. Could you send me the return label and instructions? Thanks.",
+    "category": "refund",
+    "priority": "high",
+    "sentiment": "Neutral",
+    "extracted_entities": {
+      "order_id": "ORD-90412",
+      "account_email": null,
+      "error_code": null,
+      "date": "November 2nd"
+    },
+    "missing_entities": [],
+    "generated_response": "Dear Marcus,\n\nThank you for reaching out to us. I understand you have a brand\u2011new, unopened pair of wireless noise\u2011cancelling headphones from order ORD-90412 that you\u2019d like to return for a full refund. Since the items were delivered on November\u202f2nd and your request is being made well within our 30\u2011day return window, your return qualifies for a full refund.\n\nHere\u2019s what will happen next:\n- I will generate a prepaid return shipping label for you and email it shortly.\n- Please pack the headphones in their original sealed box, attach the label, and drop the package off at the nearest carrier location.\n- Once we receive the package and confirm the items are in their original condition, we will process the refund to the original credit\u2011card payment method. Refunds are typically completed within 5\u20117 business days.\n\nIf you have any questions or need further assistance, feel free to let us know.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": null,
+    "final_response": "Dear Marcus,\n\nThank you for reaching out to us. I understand you have a brand\u2011new, unopened pair of wireless noise\u2011cancelling headphones from order ORD-90412 that you\u2019d like to return for a full refund. Since the items were delivered on November\u202f2nd and your request is being made well within our 30\u2011day return window, your return qualifies for a full refund.\n\nHere\u2019s what will happen next:\n- I will generate a prepaid return shipping label for you and email it shortly.\n- Please pack the headphones in their original sealed box, attach the label, and drop the package off at the nearest carrier location.\n- Once we receive the package and confirm the items are in their original condition, we will process the refund to the original credit\u2011card payment method. Refunds are typically completed within 5\u20117 business days.\n\nIf you have any questions or need further assistance, feel free to let us know.\n\nBest regards,\nCustomer Support Team",
+    "approval_status": "approved",
+    "ticket_status": "in_progress",
+    "created_at": "2026-11-11T10:49:55.321190",
+    "updated_at": "2026-11-11T10:50:18.125116",
+    "analysis_details": {
+      "category": "refund",
+      "priority": "high",
+      "sentiment": "Neutral",
+      "extracted_entities": {
+        "order_id": "ORD-90412",
+        "account_email": null,
+        "error_code": null,
+        "date": "November 2nd"
+      },
+      "missing_entities": [],
+      "needs_clarification": false
+    },
+    "response_details": {
+      "generated_draft": "Dear Marcus,\n\nThank you for reaching out to us. I understand you have a brand\u2011new, unopened pair of wireless noise\u2011cancelling headphones from order ORD-90412 that you\u2019d like to return for a full refund. Since the items were delivered on November\u202f2nd and your request is being made well within our 30\u2011day return window, your return qualifies for a full refund.\n\nHere\u2019s what will happen next:\n- I will generate a prepaid return shipping label for you and email it shortly.\n- Please pack the headphones in their original sealed box, attach the label, and drop the package off at the nearest carrier location.\n- Once we receive the package and confirm the items are in their original condition, we will process the refund to the original credit\u2011card payment method. Refunds are typically completed within 5\u20117 business days.\n\nIf you have any questions or need further assistance, feel free to let us know.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": null,
+      "final_response": "Dear Marcus,\n\nThank you for reaching out to us. I understand you have a brand\u2011new, unopened pair of wireless noise\u2011cancelling headphones from order ORD-90412 that you\u2019d like to return for a full refund. Since the items were delivered on November\u202f2nd and your request is being made well within our 30\u2011day return window, your return qualifies for a full refund.\n\nHere\u2019s what will happen next:\n- I will generate a prepaid return shipping label for you and email it shortly.\n- Please pack the headphones in their original sealed box, attach the label, and drop the package off at the nearest carrier location.\n- Once we receive the package and confirm the items are in their original condition, we will process the refund to the original credit\u2011card payment method. Refunds are typically completed within 5\u20117 business days.\n\nIf you have any questions or need further assistance, feel free to let us know.\n\nBest regards,\nCustomer Support Team",
+      "approval_status": "approved",
+      "ticket_status": "in_progress"
+    }
+  },
+  {
+    "ticket_id": "TCK-1001",
+    "customer": {
+      "name": "Sarah Jenkins",
+      "email": "sarah.jenkins@example.com"
+    },
+    "customer_name": "Sarah Jenkins",
+    "customer_email": "sarah.jenkins@example.com",
+    "subject": "Order #ORD-88231 has not arrived yet",
+    "original_message": "Hello, I placed an order (#ORD-88231) over 6 business days ago on November 4th with standard shipping. According to the tracking link, the package has been stuck at the regional distribution center for 3 days with no updates. Could someone please look into this and let me know when I can expect delivery? Thank you!",
+    "category": "order_issue",
+    "priority": "medium",
+    "sentiment": "Frustrated",
+    "extracted_entities": {
+      "order_id": "ORD-88231",
+      "account_email": "sarah.jenkins@example.com",
+      "error_code": null,
+      "date": "November 4th"
+    },
+    "missing_entities": [],
+    "generated_response": "Dear Sarah,\n\nThank you for reaching out and I\u2019m sorry to hear about the delay with your order #ORD-88231. I understand how frustrating it can be when a package doesn\u2019t arrive as expected.\n\nOur standard shipping window for standard delivery is 3\u20115 business days after the order is fulfilled. Since your order was placed on November\u202f4th and has now been in transit for over 6 business days, it is past the expected delivery timeframe. I have escalated this to our logistics team and we will open an inquiry with the carrier to determine the current status of your package.\n\nWe will keep you updated and aim to provide a resolution within our 24\u2011hour SLA. Thank you for your patience.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": "Dear Sarah,\n\nThank you for contacting us regarding Order ORD-88231. I have contacted FedEx Ground and escalated tracking. Your parcel has cleared regional customs and is scheduled for delivery tomorrow before 4 PM.\n\nWarm regards,\nLead Logistics Agent",
+    "final_response": "Dear Sarah,\n\nThank you for contacting us regarding Order ORD-88231. I have contacted FedEx Ground and escalated tracking. Your parcel has cleared regional customs and is scheduled for delivery tomorrow before 4 PM.\n\nWarm regards,\nLead Logistics Agent",
+    "approval_status": "pending",
+    "ticket_status": "open",
+    "created_at": "2026-11-11T10:49:38.737364",
+    "updated_at": "2026-11-11T10:50:18.098207",
+    "analysis_details": {
+      "category": "order_issue",
+      "priority": "medium",
+      "sentiment": "Frustrated",
+      "extracted_entities": {
+        "order_id": "ORD-88231",
+        "account_email": "sarah.jenkins@example.com",
+        "error_code": null,
+        "date": "November 4th"
+      },
+      "missing_entities": [],
+      "needs_clarification": false
+    },
+    "response_details": {
+      "generated_draft": "Dear Sarah,\n\nThank you for reaching out and I\u2019m sorry to hear about the delay with your order #ORD-88231. I understand how frustrating it can be when a package doesn\u2019t arrive as expected.\n\nOur standard shipping window for standard delivery is 3\u20115 business days after the order is fulfilled. Since your order was placed on November\u202f4th and has now been in transit for over 6 business days, it is past the expected delivery timeframe. I have escalated this to our logistics team and we will open an inquiry with the carrier to determine the current status of your package.\n\nWe will keep you updated and aim to provide a resolution within our 24\u2011hour SLA. Thank you for your patience.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": "Dear Sarah,\n\nThank you for contacting us regarding Order ORD-88231. I have contacted FedEx Ground and escalated tracking. Your parcel has cleared regional customs and is scheduled for delivery tomorrow before 4 PM.\n\nWarm regards,\nLead Logistics Agent",
+      "final_response": "Dear Sarah,\n\nThank you for contacting us regarding Order ORD-88231. I have contacted FedEx Ground and escalated tracking. Your parcel has cleared regional customs and is scheduled for delivery tomorrow before 4 PM.\n\nWarm regards,\nLead Logistics Agent",
+      "approval_status": "pending",
+      "ticket_status": "open"
+    }
+  },
+  {
+    "ticket_id": "TICKET-5",
+    "customer": {
+      "name": "Alex Turner",
+      "email": "aturner@enterprise.com"
+    },
+    "customer_name": "Alex Turner",
+    "customer_email": "aturner@enterprise.com",
+    "subject": "Locked account emergency",
+    "original_message": "My account is locked and I urgently need access to complete an important task.",
+    "category": "technical_issue",
+    "priority": "high",
+    "sentiment": "Highly Urgent",
+    "extracted_entities": {
+      "order_id": null,
+      "account_email": null,
+      "error_code": null,
+      "date": null
+    },
+    "missing_entities": [],
+    "generated_response": "Dear Alex,\n\nWe\u2019re sorry to hear that your account is locked and understand how critical it is for you to regain access immediately. To resolve this as quickly as possible, could you please provide the following details?\n- Browser name and version (e.g., Chrome 124, Safari 17)\n- Device and operating system you are using (e.g., Windows 11, iOS 18, macOS Sonoma)\n- The exact error message you see, or a screenshot if possible\n- Any steps you took just before the account became locked\nIn the meantime, please try clearing your browser\u2019s cache and cookies or open an incognito/private\u2011browsing window and attempt to log in again. We will review the server logs for your session and aim to resolve the issue within our 8\u2011hour SLA.\n\nThank you for your patience. We\u2019ll keep you updated on our progress.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": null,
+    "final_response": "Dear Alex,\n\nWe\u2019re sorry to hear that your account is locked and understand how critical it is for you to regain access immediately. To resolve this as quickly as possible, could you please provide the following details?\n- Browser name and version (e.g., Chrome 124, Safari 17)\n- Device and operating system you are using (e.g., Windows 11, iOS 18, macOS Sonoma)\n- The exact error message you see, or a screenshot if possible\n- Any steps you took just before the account became locked\nIn the meantime, please try clearing your browser\u2019s cache and cookies or open an incognito/private\u2011browsing window and attempt to log in again. We will review the server logs for your session and aim to resolve the issue within our 8\u2011hour SLA.\n\nThank you for your patience. We\u2019ll keep you updated on our progress.\n\nBest regards,\nCustomer Support Team",
+    "approval_status": "pending",
+    "ticket_status": "open",
+    "created_at": "2026-11-11T10:49:05.234362",
+    "updated_at": "2026-11-11T10:49:05.234362",
+    "analysis_details": {
+      "category": "technical_issue",
+      "priority": "high",
+      "sentiment": "Highly Urgent",
+      "extracted_entities": {
+        "order_id": null,
+        "account_email": null,
+        "error_code": null,
+        "date": null
+      },
+      "missing_entities": [],
+      "needs_clarification": false
+    },
+    "response_details": {
+      "generated_draft": "Dear Alex,\n\nWe\u2019re sorry to hear that your account is locked and understand how critical it is for you to regain access immediately. To resolve this as quickly as possible, could you please provide the following details?\n- Browser name and version (e.g., Chrome 124, Safari 17)\n- Device and operating system you are using (e.g., Windows 11, iOS 18, macOS Sonoma)\n- The exact error message you see, or a screenshot if possible\n- Any steps you took just before the account became locked\nIn the meantime, please try clearing your browser\u2019s cache and cookies or open an incognito/private\u2011browsing window and attempt to log in again. We will review the server logs for your session and aim to resolve the issue within our 8\u2011hour SLA.\n\nThank you for your patience. We\u2019ll keep you updated on our progress.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": null,
+      "final_response": "Dear Alex,\n\nWe\u2019re sorry to hear that your account is locked and understand how critical it is for you to regain access immediately. To resolve this as quickly as possible, could you please provide the following details?\n- Browser name and version (e.g., Chrome 124, Safari 17)\n- Device and operating system you are using (e.g., Windows 11, iOS 18, macOS Sonoma)\n- The exact error message you see, or a screenshot if possible\n- Any steps you took just before the account became locked\nIn the meantime, please try clearing your browser\u2019s cache and cookies or open an incognito/private\u2011browsing window and attempt to log in again. We will review the server logs for your session and aim to resolve the issue within our 8\u2011hour SLA.\n\nThank you for your patience. We\u2019ll keep you updated on our progress.\n\nBest regards,\nCustomer Support Team",
+      "approval_status": "pending",
+      "ticket_status": "open"
+    }
+  },
+  {
+    "ticket_id": "TICKET-4",
+    "customer": {
+      "name": "Sarah Connor",
+      "email": "sconnor@example.com"
+    },
+    "customer_name": "Sarah Connor",
+    "customer_email": "sconnor@example.com",
+    "subject": "Thank you for the support",
+    "original_message": "Thank you for helping me with my account. Your support is excellent.",
+    "category": "general_inquiry",
+    "priority": "low",
+    "sentiment": "Positive",
+    "extracted_entities": {
+      "order_id": null,
+      "account_email": null,
+      "error_code": null,
+      "date": null
+    },
+    "missing_entities": [],
+    "generated_response": "Dear Sarah,\n\nThank you for your kind words! We're delighted to hear that you found our support helpful. If you have any other questions or need further assistance, please don't hesitate to reach out. You can also visit our Help Center for more information: https://www.company.com/help\n\nBest regards,\nCustomer Support Team",
+    "edited_response": null,
+    "final_response": "Dear Sarah,\n\nThank you for your kind words! We're delighted to hear that you found our support helpful. If you have any other questions or need further assistance, please don't hesitate to reach out. You can also visit our Help Center for more information: https://www.company.com/help\n\nBest regards,\nCustomer Support Team",
+    "approval_status": "pending",
+    "ticket_status": "resolved",
+    "created_at": "2026-11-11T10:48:57.892987",
+    "updated_at": "2026-11-11T10:50:18.144444",
+    "analysis_details": {
+      "category": "general_inquiry",
+      "priority": "low",
+      "sentiment": "Positive",
+      "extracted_entities": {
+        "order_id": null,
+        "account_email": null,
+        "error_code": null,
+        "date": null
+      },
+      "missing_entities": [],
+      "needs_clarification": false
+    },
+    "response_details": {
+      "generated_draft": "Dear Sarah,\n\nThank you for your kind words! We're delighted to hear that you found our support helpful. If you have any other questions or need further assistance, please don't hesitate to reach out. You can also visit our Help Center for more information: https://www.company.com/help\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": null,
+      "final_response": "Dear Sarah,\n\nThank you for your kind words! We're delighted to hear that you found our support helpful. If you have any other questions or need further assistance, please don't hesitate to reach out. You can also visit our Help Center for more information: https://www.company.com/help\n\nBest regards,\nCustomer Support Team",
+      "approval_status": "pending",
+      "ticket_status": "resolved"
+    }
+  },
+  {
+    "ticket_id": "TICKET-3",
+    "customer": {
+      "name": "Michael Chang",
+      "email": "mchang@example.com"
+    },
+    "customer_name": "Michael Chang",
+    "customer_email": "mchang@example.com",
+    "subject": "Login error on website",
+    "original_message": "Your website shows error code ERR-404 whenever I try to log in.",
+    "category": "technical_issue",
+    "priority": "high",
+    "sentiment": "Frustrated",
+    "extracted_entities": {
+      "order_id": null,
+      "account_email": null,
+      "error_code": "ERR-404",
+      "date": null
+    },
+    "missing_entities": [],
+    "generated_response": "Dear Michael,\n\nWe\u2019re sorry you\u2019re encountering the ERR\u2011404 error when trying to log in \u2013 we understand how frustrating this can be. To resolve this as quickly as possible, could you please provide the following details?\n\n- Browser name and version (e.g., Chrome\u202f124, Safari\u202f17)\n- Device and operating system you\u2019re using (e.g., Windows\u202f11, iOS\u202f18, macOS\u202fSonoma)\n- The exact error message you see or a screenshot of the ERR\u2011404 page\n- Any steps you took just before the error appeared\n\nIn the meantime, please try these quick troubleshooting steps:\n1. Clear your browser\u2019s cache and cookies.\n2. Disable any browser extensions that might interfere, or open the site in an incognito/private\u2011browsing window.\n\nOnce we have the requested information, we\u2019ll review the server error logs for your session and, if needed, escalate the issue to our engineering on\u2011call team. Our target is to address this within our 8\u2011hour SLA.\n\nThank you for your patience, and we\u2019ll work diligently to get you back into your account.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": null,
+    "final_response": "Dear Michael,\n\nWe\u2019re sorry you\u2019re encountering the ERR\u2011404 error when trying to log in \u2013 we understand how frustrating this can be. To resolve this as quickly as possible, could you please provide the following details?\n\n- Browser name and version (e.g., Chrome\u202f124, Safari\u202f17)\n- Device and operating system you\u2019re using (e.g., Windows\u202f11, iOS\u202f18, macOS\u202fSonoma)\n- The exact error message you see or a screenshot of the ERR\u2011404 page\n- Any steps you took just before the error appeared\n\nIn the meantime, please try these quick troubleshooting steps:\n1. Clear your browser\u2019s cache and cookies.\n2. Disable any browser extensions that might interfere, or open the site in an incognito/private\u2011browsing window.\n\nOnce we have the requested information, we\u2019ll review the server error logs for your session and, if needed, escalate the issue to our engineering on\u2011call team. Our target is to address this within our 8\u2011hour SLA.\n\nThank you for your patience, and we\u2019ll work diligently to get you back into your account.\n\nBest regards,\nCustomer Support Team",
+    "approval_status": "pending",
+    "ticket_status": "open",
+    "created_at": "2026-11-11T10:48:30.525777",
+    "updated_at": "2026-11-11T10:48:30.525777",
+    "analysis_details": {
+      "category": "technical_issue",
+      "priority": "high",
+      "sentiment": "Frustrated",
+      "extracted_entities": {
+        "order_id": null,
+        "account_email": null,
+        "error_code": "ERR-404",
+        "date": null
+      },
+      "missing_entities": [],
+      "needs_clarification": false
+    },
+    "response_details": {
+      "generated_draft": "Dear Michael,\n\nWe\u2019re sorry you\u2019re encountering the ERR\u2011404 error when trying to log in \u2013 we understand how frustrating this can be. To resolve this as quickly as possible, could you please provide the following details?\n\n- Browser name and version (e.g., Chrome\u202f124, Safari\u202f17)\n- Device and operating system you\u2019re using (e.g., Windows\u202f11, iOS\u202f18, macOS\u202fSonoma)\n- The exact error message you see or a screenshot of the ERR\u2011404 page\n- Any steps you took just before the error appeared\n\nIn the meantime, please try these quick troubleshooting steps:\n1. Clear your browser\u2019s cache and cookies.\n2. Disable any browser extensions that might interfere, or open the site in an incognito/private\u2011browsing window.\n\nOnce we have the requested information, we\u2019ll review the server error logs for your session and, if needed, escalate the issue to our engineering on\u2011call team. Our target is to address this within our 8\u2011hour SLA.\n\nThank you for your patience, and we\u2019ll work diligently to get you back into your account.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": null,
+      "final_response": "Dear Michael,\n\nWe\u2019re sorry you\u2019re encountering the ERR\u2011404 error when trying to log in \u2013 we understand how frustrating this can be. To resolve this as quickly as possible, could you please provide the following details?\n\n- Browser name and version (e.g., Chrome\u202f124, Safari\u202f17)\n- Device and operating system you\u2019re using (e.g., Windows\u202f11, iOS\u202f18, macOS\u202fSonoma)\n- The exact error message you see or a screenshot of the ERR\u2011404 page\n- Any steps you took just before the error appeared\n\nIn the meantime, please try these quick troubleshooting steps:\n1. Clear your browser\u2019s cache and cookies.\n2. Disable any browser extensions that might interfere, or open the site in an incognito/private\u2011browsing window.\n\nOnce we have the requested information, we\u2019ll review the server error logs for your session and, if needed, escalate the issue to our engineering on\u2011call team. Our target is to address this within our 8\u2011hour SLA.\n\nThank you for your patience, and we\u2019ll work diligently to get you back into your account.\n\nBest regards,\nCustomer Support Team",
+      "approval_status": "pending",
+      "ticket_status": "open"
+    }
+  },
+  {
+    "ticket_id": "TICKET-2",
+    "customer": {
+      "name": "Elena Rostova",
+      "email": "elena.r@example.com"
+    },
+    "customer_name": "Elena Rostova",
+    "customer_email": "elena.r@example.com",
+    "subject": "Refund request",
+    "original_message": "I want a refund for my purchase, but I do not have my order number.",
+    "category": "refund",
+    "priority": "high",
+    "sentiment": "Frustrated",
+    "extracted_entities": {
+      "order_id": null,
+      "account_email": null,
+      "error_code": null,
+      "date": null
+    },
+    "missing_entities": [
+      "order_id"
+    ],
+    "generated_response": "Dear Elena,\n\nI\u2019m sorry to hear you\u2019re having trouble with your purchase, and I understand how frustrating this can be. I\u2019m here to help you with your refund request.\n\nTo get started, we\u2019ll need your Order Number so we can locate your purchase in our system and verify that it falls within our 30\u2011day return window. Once we have that information, we can confirm eligibility, generate a prepaid return shipping label (if applicable), and process the refund back to your original payment method within 5\u20117 business days after we receive and inspect the item.\n\nPlease reply with your Order Number at your earliest convenience, and let us know the reason for the return. If the item is damaged or defective, photos of its condition would also be helpful.\n\nThank you for your patience, and we look forward to resolving this for you promptly.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": null,
+    "final_response": "Dear Elena,\n\nI\u2019m sorry to hear you\u2019re having trouble with your purchase, and I understand how frustrating this can be. I\u2019m here to help you with your refund request.\n\nTo get started, we\u2019ll need your Order Number so we can locate your purchase in our system and verify that it falls within our 30\u2011day return window. Once we have that information, we can confirm eligibility, generate a prepaid return shipping label (if applicable), and process the refund back to your original payment method within 5\u20117 business days after we receive and inspect the item.\n\nPlease reply with your Order Number at your earliest convenience, and let us know the reason for the return. If the item is damaged or defective, photos of its condition would also be helpful.\n\nThank you for your patience, and we look forward to resolving this for you promptly.\n\nBest regards,\nCustomer Support Team",
+    "approval_status": "pending",
+    "ticket_status": "open",
+    "created_at": "2026-11-11T10:48:26.265816",
+    "updated_at": "2026-11-11T10:48:26.265816",
+    "analysis_details": {
+      "category": "refund",
+      "priority": "high",
+      "sentiment": "Frustrated",
+      "extracted_entities": {
+        "order_id": null,
+        "account_email": null,
+        "error_code": null,
+        "date": null
+      },
+      "missing_entities": [
+        "order_id"
+      ],
+      "needs_clarification": true
+    },
+    "response_details": {
+      "generated_draft": "Dear Elena,\n\nI\u2019m sorry to hear you\u2019re having trouble with your purchase, and I understand how frustrating this can be. I\u2019m here to help you with your refund request.\n\nTo get started, we\u2019ll need your Order Number so we can locate your purchase in our system and verify that it falls within our 30\u2011day return window. Once we have that information, we can confirm eligibility, generate a prepaid return shipping label (if applicable), and process the refund back to your original payment method within 5\u20117 business days after we receive and inspect the item.\n\nPlease reply with your Order Number at your earliest convenience, and let us know the reason for the return. If the item is damaged or defective, photos of its condition would also be helpful.\n\nThank you for your patience, and we look forward to resolving this for you promptly.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": null,
+      "final_response": "Dear Elena,\n\nI\u2019m sorry to hear you\u2019re having trouble with your purchase, and I understand how frustrating this can be. I\u2019m here to help you with your refund request.\n\nTo get started, we\u2019ll need your Order Number so we can locate your purchase in our system and verify that it falls within our 30\u2011day return window. Once we have that information, we can confirm eligibility, generate a prepaid return shipping label (if applicable), and process the refund back to your original payment method within 5\u20117 business days after we receive and inspect the item.\n\nPlease reply with your Order Number at your earliest convenience, and let us know the reason for the return. If the item is damaged or defective, photos of its condition would also be helpful.\n\nThank you for your patience, and we look forward to resolving this for you promptly.\n\nBest regards,\nCustomer Support Team",
+      "approval_status": "pending",
+      "ticket_status": "open"
+    }
+  },
+  {
+    "ticket_id": "TICKET-1",
+    "customer": {
+      "name": "David Miller",
+      "email": "david.miller@example.com"
+    },
+    "customer_name": "David Miller",
+    "customer_email": "david.miller@example.com",
+    "subject": "Order delivery status",
+    "original_message": "My order ORD-2045 has not arrived. Please check its status.",
+    "category": "order_issue",
+    "priority": "medium",
+    "sentiment": "Frustrated",
+    "extracted_entities": {
+      "order_id": "ORD-2045",
+      "account_email": null,
+      "error_code": null,
+      "date": null
+    },
+    "missing_entities": [],
+    "generated_response": "Dear David,\n\nWe\u2019re sorry to hear that your order ORD-2045 has not arrived yet. I understand how frustrating this can be, and I appreciate you bringing it to our attention.\n\nI\u2019ve flagged this with our logistics team and will check the current tracking status. If the delivery window of 3\u20115 business days has passed, we\u2019ll open an inquiry with the carrier and keep you updated. You can expect a response within our 24\u2011hour SLA.\n\nThank you for your patience. If you have any additional details, such as a tracking number, please let us know.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": null,
+    "final_response": "Dear David,\n\nWe\u2019re sorry to hear that your order ORD-2045 has not arrived yet. I understand how frustrating this can be, and I appreciate you bringing it to our attention.\n\nI\u2019ve flagged this with our logistics team and will check the current tracking status. If the delivery window of 3\u20115 business days has passed, we\u2019ll open an inquiry with the carrier and keep you updated. You can expect a response within our 24\u2011hour SLA.\n\nThank you for your patience. If you have any additional details, such as a tracking number, please let us know.\n\nBest regards,\nCustomer Support Team",
+    "approval_status": "pending",
+    "ticket_status": "open",
+    "created_at": "2026-11-11T10:48:23.144235",
+    "updated_at": "2026-11-11T10:48:23.144235",
+    "analysis_details": {
+      "category": "order_issue",
+      "priority": "medium",
+      "sentiment": "Frustrated",
+      "extracted_entities": {
+        "order_id": "ORD-2045",
+        "account_email": null,
+        "error_code": null,
+        "date": null
+      },
+      "missing_entities": [],
+      "needs_clarification": false
+    },
+    "response_details": {
+      "generated_draft": "Dear David,\n\nWe\u2019re sorry to hear that your order ORD-2045 has not arrived yet. I understand how frustrating this can be, and I appreciate you bringing it to our attention.\n\nI\u2019ve flagged this with our logistics team and will check the current tracking status. If the delivery window of 3\u20115 business days has passed, we\u2019ll open an inquiry with the carrier and keep you updated. You can expect a response within our 24\u2011hour SLA.\n\nThank you for your patience. If you have any additional details, such as a tracking number, please let us know.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": null,
+      "final_response": "Dear David,\n\nWe\u2019re sorry to hear that your order ORD-2045 has not arrived yet. I understand how frustrating this can be, and I appreciate you bringing it to our attention.\n\nI\u2019ve flagged this with our logistics team and will check the current tracking status. If the delivery window of 3\u20115 business days has passed, we\u2019ll open an inquiry with the carrier and keep you updated. You can expect a response within our 24\u2011hour SLA.\n\nThank you for your patience. If you have any additional details, such as a tracking number, please let us know.\n\nBest regards,\nCustomer Support Team",
+      "approval_status": "pending",
+      "ticket_status": "open"
+    }
+  },
+  {
+    "ticket_id": "P6-CSV-003",
+    "customer": {
+      "name": "Sophia Loren",
+      "email": "sophia.l@example.com"
+    },
+    "customer_name": "Sophia Loren",
+    "customer_email": "sophia.l@example.com",
+    "subject": "Billing inquiry",
+    "original_message": "Can you explain the extra charge on my monthly bill?",
+    "category": "refund",
+    "priority": "medium",
+    "sentiment": "Neutral",
+    "extracted_entities": {
+      "order_id": null,
+      "account_email": null,
+      "error_code": null,
+      "date": null
+    },
+    "missing_entities": [
+      "order_id"
+    ],
+    "generated_response": "Dear Sophia,\n\nThank you for contacting us about the extra charge on your monthly bill. I understand you\u2019d like clarification on this matter.\n\nTo investigate the charge and determine if a refund may be applicable, could you please provide your order number? With the order number we can:\n- Verify the purchase date and confirm whether it falls within our 30\u2011day refund window.\n- Review the billing details and any applicable fees.\n- Inform you of the next steps, including the possibility of generating a prepaid return label (if a product return is required) and the standard 5\u20117 business\u2011day processing time for approved refunds.\n\nOnce we have the order number, we\u2019ll be able to address your inquiry promptly and keep you updated within our 12\u2011hour SLA.\n\nThank you for your cooperation.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": "Dear Sophia, the charge has been credited back to your account in full. Thank you.",
+    "final_response": "Dear Sophia, the charge has been credited back to your account in full. Thank you.",
+    "approval_status": "pending",
+    "ticket_status": "open",
+    "created_at": "2026-11-11T10:41:39.820385",
+    "updated_at": "2026-11-11T10:41:39.871985",
+    "analysis_details": {
+      "category": "refund",
+      "priority": "medium",
+      "sentiment": "Neutral",
+      "extracted_entities": {
+        "order_id": null,
+        "account_email": null,
+        "error_code": null,
+        "date": null
+      },
+      "missing_entities": [
+        "order_id"
+      ],
+      "needs_clarification": true
+    },
+    "response_details": {
+      "generated_draft": "Dear Sophia,\n\nThank you for contacting us about the extra charge on your monthly bill. I understand you\u2019d like clarification on this matter.\n\nTo investigate the charge and determine if a refund may be applicable, could you please provide your order number? With the order number we can:\n- Verify the purchase date and confirm whether it falls within our 30\u2011day refund window.\n- Review the billing details and any applicable fees.\n- Inform you of the next steps, including the possibility of generating a prepaid return label (if a product return is required) and the standard 5\u20117 business\u2011day processing time for approved refunds.\n\nOnce we have the order number, we\u2019ll be able to address your inquiry promptly and keep you updated within our 12\u2011hour SLA.\n\nThank you for your cooperation.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": "Dear Sophia, the charge has been credited back to your account in full. Thank you.",
+      "final_response": "Dear Sophia, the charge has been credited back to your account in full. Thank you.",
+      "approval_status": "pending",
+      "ticket_status": "open"
+    }
+  },
+  {
+    "ticket_id": "P6-APPROVE-002",
+    "customer": {
+      "name": "Daniel Craig",
+      "email": "daniel.c@example.com"
+    },
+    "customer_name": "Daniel Craig",
+    "customer_email": "daniel.c@example.com",
+    "subject": "Wrong item delivered",
+    "original_message": "I ordered headphones but received a phone case. Order ORD-44321.",
+    "category": "order_issue",
+    "priority": "medium",
+    "sentiment": "Frustrated",
+    "extracted_entities": {
+      "order_id": "ORD-44321",
+      "account_email": "daniel.c@example.com",
+      "error_code": null,
+      "date": null
+    },
+    "missing_entities": [],
+    "generated_response": "Dear Daniel,\n\nWe\u2019re sorry to hear that you received a phone case instead of the headphones you ordered (Order\u202fORD-44321). We understand how frustrating this must be.\n\nOur logistics team is already reviewing the shipment details to determine how this error occurred. We will arrange to send you the correct headphones as quickly as possible, and we\u2019ll provide a prepaid return label for the phone case. You can expect an update from us within the next 24\u202fhours.\n\nIf you have any additional information, such as the tracking number, please let us know.\n\nThank you for your patience.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": "Hello Daniel,\n\nWe apologize for the fulfillment mistake on Order ORD-44321. A replacement pair of headphones has been expedited to your address at no charge.\n\nSincerely,\nSupport Lead",
+    "final_response": "Hello Daniel,\n\nWe apologize for the fulfillment mistake on Order ORD-44321. A replacement pair of headphones has been expedited to your address at no charge.\n\nSincerely,\nSupport Lead",
+    "approval_status": "approved",
+    "ticket_status": "resolved",
+    "created_at": "2026-11-11T10:41:15.661597",
+    "updated_at": "2026-11-11T10:41:15.895318",
+    "analysis_details": {
+      "category": "order_issue",
+      "priority": "medium",
+      "sentiment": "Frustrated",
+      "extracted_entities": {
+        "order_id": "ORD-44321",
+        "account_email": "daniel.c@example.com",
+        "error_code": null,
+        "date": null
+      },
+      "missing_entities": [],
+      "needs_clarification": false
+    },
+    "response_details": {
+      "generated_draft": "Dear Daniel,\n\nWe\u2019re sorry to hear that you received a phone case instead of the headphones you ordered (Order\u202fORD-44321). We understand how frustrating this must be.\n\nOur logistics team is already reviewing the shipment details to determine how this error occurred. We will arrange to send you the correct headphones as quickly as possible, and we\u2019ll provide a prepaid return label for the phone case. You can expect an update from us within the next 24\u202fhours.\n\nIf you have any additional information, such as the tracking number, please let us know.\n\nThank you for your patience.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": "Hello Daniel,\n\nWe apologize for the fulfillment mistake on Order ORD-44321. A replacement pair of headphones has been expedited to your address at no charge.\n\nSincerely,\nSupport Lead",
+      "final_response": "Hello Daniel,\n\nWe apologize for the fulfillment mistake on Order ORD-44321. A replacement pair of headphones has been expedited to your address at no charge.\n\nSincerely,\nSupport Lead",
+      "approval_status": "approved",
+      "ticket_status": "resolved"
+    }
+  },
+  {
+    "ticket_id": "P6-EDIT-001",
+    "customer": {
+      "name": "Eleanor Vance",
+      "email": "eleanor.vance@example.com"
+    },
+    "customer_name": "Eleanor Vance",
+    "customer_email": "eleanor.vance@example.com",
+    "subject": "Missing order tracking info",
+    "original_message": "Where is my shipment for order ORD-99214? I need tracking details immediately.",
+    "category": "order_issue",
+    "priority": "high",
+    "sentiment": "Highly Urgent",
+    "extracted_entities": {
+      "order_id": "ORD-99214",
+      "account_email": null,
+      "error_code": null,
+      "date": null
+    },
+    "missing_entities": [],
+    "generated_response": "Dear Eleanor,\n\nWe understand how important it is to receive your shipment promptly, and we\u2019re sorry for the inconvenience caused by the missing tracking information for your order ORD-99214. I\u2019ve escalated this to our logistics team, and we\u2019ll check the current status in our system. You can expect an update with the tracking details within our 24\u2011hour SLA.\n\nThank you for your patience.\n\nBest regards,\nCustomer Support Team",
+    "edited_response": null,
+    "final_response": "Dear Eleanor,\n\nWe understand how important it is to receive your shipment promptly, and we\u2019re sorry for the inconvenience caused by the missing tracking information for your order ORD-99214. I\u2019ve escalated this to our logistics team, and we\u2019ll check the current status in our system. You can expect an update with the tracking details within our 24\u2011hour SLA.\n\nThank you for your patience.\n\nBest regards,\nCustomer Support Team",
+    "approval_status": "pending",
+    "ticket_status": "open",
+    "created_at": "2026-11-11T10:40:28.950697",
+    "updated_at": "2026-11-11T10:40:50.856841",
+    "analysis_details": {
+      "category": "order_issue",
+      "priority": "high",
+      "sentiment": "Highly Urgent",
+      "extracted_entities": {
+        "order_id": "ORD-99214",
+        "account_email": null,
+        "error_code": null,
+        "date": null
+      },
+      "missing_entities": [],
+      "needs_clarification": false
+    },
+    "response_details": {
+      "generated_draft": "Dear Eleanor,\n\nWe understand how important it is to receive your shipment promptly, and we\u2019re sorry for the inconvenience caused by the missing tracking information for your order ORD-99214. I\u2019ve escalated this to our logistics team, and we\u2019ll check the current status in our system. You can expect an update with the tracking details within our 24\u2011hour SLA.\n\nThank you for your patience.\n\nBest regards,\nCustomer Support Team",
+      "edited_draft": null,
+      "final_response": "Dear Eleanor,\n\nWe understand how important it is to receive your shipment promptly, and we\u2019re sorry for the inconvenience caused by the missing tracking information for your order ORD-99214. I\u2019ve escalated this to our logistics team, and we\u2019ll check the current status in our system. You can expect an update with the tracking details within our 24\u2011hour SLA.\n\nThank you for your patience.\n\nBest regards,\nCustomer Support Team",
+      "approval_status": "pending",
+      "ticket_status": "open"
+    }
+  }
+]
