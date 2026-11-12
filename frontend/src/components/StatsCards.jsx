@@ -38,7 +38,7 @@ export default function StatsCards({ stats }) {
       color: '#059669',
     },
     {
-      label: 'High Priority',
+      label: 'P1 Urgent (High/Crit)',
       value: stats?.high_priority_tickets ?? 0,
       icon: Flame,
       bg: '#fef2f2',

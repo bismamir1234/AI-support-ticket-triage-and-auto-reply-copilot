@@ -1,7 +1,10 @@
+import re
 from datetime import datetime
 from enum import Enum
 from typing import Any, Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
+
+from app.config import settings
 
 
 class HealthResponse(BaseModel):
@@ -56,6 +59,19 @@ class ExtractedEntities(BaseModel):
     date: Optional[str] = None
 
 
+def clean_unnecessary_whitespace(text: str) -> str:
+    """Trim leading/trailing whitespace and collapse redundant spaces/blank lines."""
+    if text is None:
+        return ""
+    normalized_lines = [re.sub(r"[ \t]+", " ", line).strip() for line in str(text).splitlines()]
+    # Collapse consecutive blank lines to at most one
+    cleaned_lines: list[str] = []
+    for line in normalized_lines:
+        if line or (cleaned_lines and cleaned_lines[-1] != ""):
+            cleaned_lines.append(line)
+    return "\n".join(cleaned_lines).strip()
+
+
 class TicketIngestionRequest(BaseModel):
     ticket_id: str = Field(..., description="Unique ticket identifier (e.g. T001, TCK-1001)")
     customer_name: str = Field(..., description="Name of the customer")
@@ -68,23 +84,61 @@ class TicketIngestionRequest(BaseModel):
     def populate_message_aliases(cls, data: Any) -> Any:
         if isinstance(data, dict):
             # Allow body, raw_message, or raw_customer_message aliases
-            if "message" not in data or not data["message"]:
+            if "message" not in data or data["message"] is None or str(data["message"]).strip() == "":
                 for alias in ["body", "raw_message", "raw_customer_message", "content", "original_message"]:
-                    if alias in data and data[alias]:
+                    if alias in data and data[alias] is not None and str(data[alias]).strip() != "":
                         data["message"] = data[alias]
                         break
         return data
+
+    @field_validator("ticket_id", "customer_name", "customer_email", mode="before")
+    @classmethod
+    def validate_non_empty_metadata(cls, v: Any, info: Any) -> str:
+        cleaned = clean_unnecessary_whitespace(v)
+        if not cleaned:
+            raise ValueError(f"{info.field_name.replace('_', ' ').title()} cannot be empty.")
+        if info.field_name == "customer_email" and "@" not in cleaned:
+            raise ValueError("Customer email must be a valid email address.")
+        return cleaned
+
+    @field_validator("subject", mode="before")
+    @classmethod
+    def validate_subject(cls, v: Any) -> str:
+        cleaned = clean_unnecessary_whitespace(v)
+        if not cleaned:
+            raise ValueError("Ticket subject cannot be empty.")
+        if len(cleaned) > settings.MAX_SUBJECT_LENGTH:
+            raise ValueError(
+                f"Ticket subject exceeds maximum length of {settings.MAX_SUBJECT_LENGTH} characters."
+            )
+        return cleaned
+
+    @field_validator("message", mode="before")
+    @classmethod
+    def validate_message(cls, v: Any) -> str:
+        cleaned = clean_unnecessary_whitespace(v)
+        if not cleaned:
+            raise ValueError("Ticket message cannot be empty or contain only whitespace.")
+        if len(cleaned) > settings.MAX_MESSAGE_LENGTH:
+            raise ValueError(
+                f"Ticket message exceeds maximum allowed length of {settings.MAX_MESSAGE_LENGTH:,} characters "
+                f"(received {len(cleaned):,} characters)."
+            )
+        return cleaned
 
 
 class TicketAnalysisResponse(BaseModel):
     ticket_id: str
     category: TicketCategory
+    secondary_categories: list[str] = Field(default_factory=list)
     priority: TicketPriority
     sentiment: TicketSentiment
     entities: ExtractedEntities
     missing_entities: list[str] = Field(default_factory=list)
     needs_clarification: bool = False
     reason: Optional[str] = None
+    prompt_injection_detected: bool = False
+    security_flags: list[str] = Field(default_factory=list)
 
     @field_validator("category", mode="before")
     @classmethod
@@ -182,10 +236,16 @@ class TicketDBResponse(BaseModel):
     subject: str
     original_message: str
     category: str
+    secondary_categories: list[str] = Field(default_factory=list)
     priority: str
+    urgency_tier: Optional[str] = None
     sentiment: str
     extracted_entities: dict[str, Any] = Field(default_factory=dict)
     missing_entities: list[str] = Field(default_factory=list)
+    needs_clarification: bool = False
+    analysis_reason: Optional[str] = None
+    prompt_injection_detected: bool = False
+    security_flags: list[str] = Field(default_factory=list)
     generated_response: Optional[str] = None
     edited_response: Optional[str] = None
     final_response: Optional[str] = None
@@ -194,6 +254,22 @@ class TicketDBResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+    @model_validator(mode="after")
+    def populate_urgency_tier(self) -> "TicketDBResponse":
+        if not self.urgency_tier:
+            prio = (self.priority or "medium").lower()
+            if prio in ("critical", "high"):
+                self.urgency_tier = "P1"
+            elif prio == "medium":
+                self.urgency_tier = "P2"
+            else:
+                self.urgency_tier = "P3"
+        if self.secondary_categories is None:
+            self.secondary_categories = []
+        if self.security_flags is None:
+            self.security_flags = []
+        return self
+
 
 class TicketDBUpdate(BaseModel):
     edited_response: Optional[str] = None
@@ -201,9 +277,42 @@ class TicketDBUpdate(BaseModel):
     ticket_status: Optional[str] = None    # open, in_progress, resolved, closed
     priority: Optional[str] = None
 
+    @field_validator("edited_response", mode="before")
+    @classmethod
+    def validate_edited_response(cls, v: Any) -> Optional[str]:
+        if v is None:
+            return None
+        cleaned = str(v).strip()
+        if not cleaned:
+            raise ValueError("Edited response cannot be empty whitespace.")
+        if len(cleaned) > settings.MAX_MESSAGE_LENGTH * 2:
+            raise ValueError("Edited response exceeds maximum permitted length.")
+        return cleaned
+
 
 class TicketApproveRequest(BaseModel):
     edited_response: Optional[str] = None
+
+    @field_validator("edited_response", mode="before")
+    @classmethod
+    def validate_edited_response(cls, v: Any) -> Optional[str]:
+        if v is None:
+            return None
+        cleaned = str(v).strip()
+        if not cleaned:
+            raise ValueError("Approved response cannot be empty whitespace.")
+        if len(cleaned) > settings.MAX_MESSAGE_LENGTH * 2:
+            raise ValueError("Approved response exceeds maximum permitted length.")
+        return cleaned
+
+
+class AIStatusResponse(BaseModel):
+    status: str  # "online", "missing_key", "auth_error", "rate_limited", "network_error", "error"
+    configured: bool
+    model: str
+    max_message_length: int
+    message: str
+    error_code: Optional[str] = None
 
 
 class MockSendDetails(BaseModel):

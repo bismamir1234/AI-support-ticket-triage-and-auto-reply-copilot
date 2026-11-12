@@ -177,6 +177,7 @@ npm run preview -- --port 5173
 | `POST` | `/api/v1/tickets/{ticket_id}/regenerate`| Re-run policy grounding to regenerate AI response draft |
 | `POST` | `/api/v1/tickets/{ticket_id}/approve` | Approve response and execute mock email dispatch (DEMO ONLY) |
 | `POST` | `/api/v1/tickets/{ticket_id}/resolve` | Mark ticket as resolved in SQLite and trigger dashboard stats refresh |
+| `GET` | `/api/v1/tickets/ai-status` | Verify Groq API key configuration, model, and service health |
 | `GET` | `/api/v1/tickets/stats` | Live computed statistics from SQLite database |
 | `POST` | `/api/v1/tickets/seed-samples` | Seed pre-populated realistic demo tickets into SQLite |
 | `GET` | `/api/v1/tickets/export/csv` | Download complete tickets dataset as CSV |
@@ -259,27 +260,35 @@ flowchart TD
 - **Persistent Preferences:** The user's preference is saved in `localStorage` and respects the OS `prefers-color-scheme`.
 - **High-Contrast Design:** Dark theme surfaces (`#0b0f19`, `#111827`, `#1f2937`) optimize readability for long agent shifts.
 
+### 7. Security Guardrails, Validation & P1–P3 Urgency UI
+- **Prompt Injection Defense (`backend/app/services/security.py`):** Treats all customer text as untrusted input wrapped in `<untrusted_customer_input>` XML delimiters, detects instruction overrides / prompt-leak probes / unauthorized refund demands, keeps customer data intact for classification, and forces manual review.
+- **Refund Policy Enforcement:** Reads refund rules and limits strictly from `backend/policy.json`, prevents invented monetary limits or unverified `"refund processed"` claims via deterministic backend post-validation, and clearly separates refund requests from approved refunds.
+- **Input & Error Validation:** Rejects empty/whitespace-only messages and inputs exceeding `MAX_MESSAGE_LENGTH` (`10,000` chars) at both React and Pydantic layers; handles missing/invalid Groq API keys, rate limits, network errors, and malformed model JSON with secret-scrubbed user-friendly messages.
+- **Urgency Badges:** Maps `critical`/`high` to **P1 (Red)**, `medium` to **P2 (Yellow)**, and `low` to **P3 (Gray)** while keeping the original priority visible in ticket details.
+
 ---
 
 ## 🧪 Testing Instructions
 
-Run the full automated test suite (17 tests covering classification, policy grounding, draft editing, mock approval, resolution, and exports):
+Run the full automated test suite (45 tests covering 10-ticket synthetic live Groq suite, 18 security/validation unit & API tests, 5-scenario baseline, policy grounding, draft editing, mock approval, resolution, and exports):
 
 ```bash
 # Run all tests
-python -m pytest backend/tests
-
-# Run Phase 6 ticket management tests specifically
-python -m pytest backend/tests/test_phase6_ticket_management.py
-
-# Run with verbose output
 python -m pytest backend/tests -v
+
+# Run Security, Prompt Injection, Validation & Error Handling unit tests
+python -m pytest backend/tests/test_security_and_validation.py -v
+
+# Run 10-Ticket Synthetic Evaluation Suite (Live Groq API)
+python -m pytest backend/tests/test_ten_synthetic_tickets.py -v
 ```
 
 ### Verified Test Suites
-1. **[`test_five_scenarios.py`](backend/tests/test_five_scenarios.py)**: 6 integration tests verifying real-world triage against the 5 benchmark tickets.
-2. **[`test_phase4_auto_reply.py`](backend/tests/test_phase4_auto_reply.py)**: 5 tests checking policy matching, grounding safety rules, and SQLite upsert.
-3. **[`test_phase6_ticket_management.py`](backend/tests/test_phase6_ticket_management.py)**: 6 tests checking draft editing, saving, mock approval, resolution, CSV download formatting, and JSON analysis structure.
+1. **[`test_security_and_validation.py`](backend/tests/test_security_and_validation.py)**: 18 unit & API tests verifying prompt injection isolation, backend refund guardrail overrides, sarcasm/mixed-category/clarification edge cases, whitespace & 10,000-char limits, and all 7 API key/error states without secret leakage.
+2. **[`test_ten_synthetic_tickets.py`](backend/tests/test_ten_synthetic_tickets.py)**: 10 live Groq end-to-end tests matching [`test_tickets_10.json`](backend/test_tickets_10.json) (including sarcasm, mixed refund+tech, prompt injection, and incomplete clarification).
+3. **[`test_five_scenarios.py`](backend/tests/test_five_scenarios.py)**: 6 integration tests verifying baseline triage scenarios.
+4. **[`test_phase4_auto_reply.py`](backend/tests/test_phase4_auto_reply.py)**: 5 tests checking policy matching, grounding safety rules, and SQLite upsert.
+5. **[`test_phase6_ticket_management.py`](backend/tests/test_phase6_ticket_management.py)**: 6 tests checking draft editing, saving, mock approval, resolution, CSV download formatting, and JSON analysis structure.
 
 ---
 
@@ -302,6 +311,21 @@ All verification evidence has been generated directly from the live codebase and
   12. `12_export_functionality.png`: Reports panel with category/sentiment charts and Export buttons.
   13. `13_dark_mode_dashboard.png`: Dark mode dashboard layout with high-contrast surfaces.
   14. `14_dark_mode_detail.png`: Dark mode detail copilot workspace with response draft.
+  15. `15_updated_dashboard.png`: Updated dashboard with P1–P3 urgency mapping and live AI status.
+  16. `16_ticket_inbox_p1_p2_p3.png`: Ticket inbox showing P1 (Red), P2 (Yellow), P3 (Gray) & Security badges.
+  17. `17_ticket_details_and_ai_analysis.png`: Ticket details displaying original priority, secondary categories, and extracted entities.
+  18. `18_empty_state.png`: Search/filter empty state with recovery button.
+  19. `19_input_validation_error.png`: New ticket modal input validation alert & character counter.
+  20. `20_api_key_error_state.png`: User-friendly API key error banner without secret leakage.
+  21. `21_prompt_injection_test_result.png`: Prompt injection attempt neutralized & flagged in AI analysis.
+  22. `22_generated_customer_response.png`: Policy-grounded generated customer response draft.
+
+- **10-Ticket & Security Verification (`evidence/`):**
+  - `evidence/test_matrix_10_tickets.csv`: Expected vs. actual comparison matrix for all 10 synthetic tickets.
+  - `evidence/test_results.json`: Full JSON records for all 10 tickets and adversarial security checks.
+  - `evidence/classification_comparison.md`: Detailed classification analysis table across normal and edge cases.
+  - `evidence/security_test_report.md`: Prompt injection protection & refund policy enforcement report.
+  - `evidence/README.md`: Complete index of verification evidence.
 
 - **Actual Data Exports (`evidence/exports/`):**
   - `actual_tickets_export.csv`: Live CSV download from SQLite with all 8 required headers.
@@ -310,7 +334,7 @@ All verification evidence has been generated directly from the live codebase and
 - **Test Results & Logs (`evidence/test_results/` & `evidence/classification_logs/`):**
   - `expected_vs_actual_table.md`: Comprehensive Markdown table comparing expected vs. actual benchmark results.
   - `five_tickets_comparison.json`: Complete JSON test log for the 5 reference tickets.
-  - `pytest_results.txt`: Terminal output confirming all 17 automated tests passing.
+  - `pytest_results.txt`: Automated pytest output log.
   - `actual_classification.log`: Live server execution and Groq inference logs.
 
 ---

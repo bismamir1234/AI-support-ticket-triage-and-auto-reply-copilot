@@ -15,6 +15,9 @@ class Settings(BaseSettings):
     GROQ_API_KEY: str = ""
     GROQ_MODEL: str = "openai/gpt-oss-120b"
     ALLOWED_ORIGINS: str = "http://localhost:5173,http://127.0.0.1:5173"
+    MAX_MESSAGE_LENGTH: int = 10000
+    MAX_SUBJECT_LENGTH: int = 500
+    ALLOW_RULE_FALLBACK: bool = False
 
     @property
     def cors_origins_list(self) -> list[str]:

@@ -5,8 +5,10 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from fastapi.responses import JSONResponse, Response
 from sqlalchemy.orm import Session
 
+from app.config import settings
 from app.database import get_db
 from app.schemas import (
+    AIStatusResponse,
     AutoReplyDraftResponse,
     TicketAnalysisResponse,
     TicketApprovalResponse,
@@ -18,6 +20,7 @@ from app.schemas import (
     TicketResolutionResponse,
 )
 from app.services.auto_reply_generator import auto_reply_service, policy_manager
+from app.services.exceptions import AIServiceError, sanitize_error_message
 from app.services.ticket_analyzer import analyzer_service
 from app.services.ticket_service import ticket_db_service
 
@@ -39,10 +42,17 @@ BACKEND_DIR = Path(__file__).resolve().parent.parent.parent
 def analyze_ticket_endpoint(ticket: TicketIngestionRequest) -> TicketAnalysisResponse:
     try:
         return analyzer_service.analyze_ticket(ticket)
+    except AIServiceError:
+        raise
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=sanitize_error_message(str(exc)),
+        ) from exc
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Ticket analysis failed: {str(exc)}",
+            detail=f"Ticket analysis failed: {sanitize_error_message(str(exc))}",
         ) from exc
 
 
@@ -58,10 +68,17 @@ def draft_reply_endpoint(ticket: TicketIngestionRequest) -> AutoReplyDraftRespon
         analysis = analyzer_service.analyze_ticket(ticket)
         draft = auto_reply_service.generate_draft(ticket, analysis)
         return AutoReplyDraftResponse(**draft)
+    except AIServiceError:
+        raise
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=sanitize_error_message(str(exc)),
+        ) from exc
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Auto-reply generation failed: {str(exc)}",
+            detail=f"Auto-reply generation failed: {sanitize_error_message(str(exc))}",
         ) from exc
 
 
@@ -78,10 +95,17 @@ def process_and_persist_ticket(
 ) -> TicketProcessResult:
     try:
         return ticket_db_service.process_and_save_ticket(db, ticket)
+    except AIServiceError:
+        raise
+    except ValueError as exc:
+        raise HTTPException(
+            status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=sanitize_error_message(str(exc)),
+        ) from exc
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Processing ticket failed: {str(exc)}",
+            detail=f"Processing ticket failed: {sanitize_error_message(str(exc))}",
         ) from exc
 
 
@@ -130,6 +154,24 @@ def run_sample_tickets_analysis() -> List[TicketAnalysisResponse]:
 # =====================================================================
 # PHASE 4: SQLITE TICKET DATABASE & HUMAN-IN-THE-LOOP CRUD
 # =====================================================================
+
+@router.get(
+    "/ai-status",
+    response_model=AIStatusResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Check real-time Groq AI key and service status",
+)
+def get_ai_status_endpoint() -> AIStatusResponse:
+    status_info = analyzer_service.verify_connection()
+    return AIStatusResponse(
+        status=status_info["status"],
+        configured=status_info["configured"],
+        model=analyzer_service.model,
+        max_message_length=settings.MAX_MESSAGE_LENGTH,
+        message=status_info["message"],
+        error_code=status_info.get("error_code"),
+    )
+
 
 @router.get(
     "/stats",

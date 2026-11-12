@@ -10,7 +10,22 @@ import {
   Frown,
   Flame,
   CheckCircle2,
+  ShieldAlert,
 } from 'lucide-react';
+
+export function mapPriorityToUrgency(priority) {
+  const prio = (priority || 'medium').toLowerCase().trim();
+  if (prio === 'critical') {
+    return { tier: 'P1', originalLabel: 'Critical', cssClass: 'badge-priority-p1' };
+  }
+  if (prio === 'high') {
+    return { tier: 'P1', originalLabel: 'High', cssClass: 'badge-priority-p1' };
+  }
+  if (prio === 'medium') {
+    return { tier: 'P2', originalLabel: 'Medium', cssClass: 'badge-priority-p2' };
+  }
+  return { tier: 'P3', originalLabel: 'Low', cssClass: 'badge-priority-p3' };
+}
 
 export function CategoryBadge({ category }) {
   const cat = (category || 'general_inquiry').toLowerCase();
@@ -47,35 +62,33 @@ export function CategoryBadge({ category }) {
   );
 }
 
-export function PriorityBadge({ priority }) {
-  const prio = (priority || 'medium').toLowerCase();
+export function PriorityBadge({ priority, showOriginal = false }) {
+  const { tier, originalLabel, cssClass } = mapPriorityToUrgency(priority);
 
-  if (prio === 'critical') {
-    return (
-      <span className="badge badge-priority-critical">
-        <Flame size={12} />
-        Critical
-      </span>
-    );
-  }
-  if (prio === 'high') {
-    return (
-      <span className="badge badge-priority-high">
-        <AlertTriangle size={12} />
-        High
-      </span>
-    );
-  }
-  if (prio === 'medium') {
-    return (
-      <span className="badge badge-priority-medium">
-        Medium
-      </span>
-    );
-  }
   return (
-    <span className="badge badge-priority-low">
-      Low
+    <span
+      className={`badge ${cssClass}`}
+      title={`Urgency: ${tier} | Original Priority: ${originalLabel}`}
+    >
+      {tier === 'P1' ? (
+        <Flame size={12} />
+      ) : tier === 'P2' ? (
+        <AlertTriangle size={12} />
+      ) : null}
+      <span>{showOriginal ? `${tier} · ${originalLabel}` : tier}</span>
+    </span>
+  );
+}
+
+export function SecurityBadge({ detected }) {
+  if (!detected) return null;
+  return (
+    <span
+      className="badge badge-security-guarded"
+      title="Prompt injection attempt detected and isolated as untrusted input"
+    >
+      <ShieldAlert size={12} />
+      Injection Blocked
     </span>
   );
 }
@@ -142,7 +155,7 @@ export function ApprovalBadge({ approvalStatus }) {
   }
   if (st === 'rejected') {
     return (
-      <span className="badge badge-priority-critical" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+      <span className="badge badge-priority-p1" style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
         <AlertTriangle size={12} />
         Rejected
       </span>
@@ -154,4 +167,3 @@ export function ApprovalBadge({ approvalStatus }) {
     </span>
   );
 }
-

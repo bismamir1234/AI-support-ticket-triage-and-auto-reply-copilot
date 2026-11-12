@@ -17,6 +17,7 @@ export default function Sidebar({
   activeTab,
   setActiveTab,
   stats,
+  aiStatus,
   onOpenNewTicketModal,
   isDarkMode,
   toggleTheme,
@@ -106,10 +107,37 @@ export default function Sidebar({
       </nav>
 
       <div className="sidebar-footer">
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#10b981', fontWeight: 600 }}>
-          <Sparkles size={14} />
-          <span>Groq AI Online</span>
-        </div>
+        {aiStatus?.status === 'online' ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#10b981', fontWeight: 600 }}>
+            <Sparkles size={14} />
+            <span>Groq AI Online</span>
+          </div>
+        ) : aiStatus?.status === 'missing_key' ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#dc2626', fontWeight: 600 }}>
+            <AlertCircle size={14} />
+            <span>API Key Missing</span>
+          </div>
+        ) : aiStatus?.status === 'auth_error' ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#dc2626', fontWeight: 600 }}>
+            <AlertCircle size={14} />
+            <span>Invalid API Key</span>
+          </div>
+        ) : aiStatus?.status === 'rate_limited' ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#d97706', fontWeight: 600 }}>
+            <Clock size={14} />
+            <span>AI Rate Limited</span>
+          </div>
+        ) : aiStatus?.status ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#dc2626', fontWeight: 600 }}>
+            <AlertCircle size={14} />
+            <span>AI Service Error</span>
+          </div>
+        ) : (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--text-muted)', fontWeight: 600 }}>
+            <Clock size={14} />
+            <span>Checking AI...</span>
+          </div>
+        )}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: '4px' }}>
           <span>{isDarkMode ? '🌙 Dark Mode' : '☀️ Light Mode'}</span>
           <button

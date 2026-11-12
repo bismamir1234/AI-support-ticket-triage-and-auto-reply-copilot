@@ -14,15 +14,11 @@ import {
   AlertCircle,
   Clock,
   ShieldCheck,
-  User,
-  Mail,
   X,
   Undo,
-  ExternalLink,
   Bot,
   Flame,
   Check,
-  BarChart3,
   Tag,
   Sun,
   Moon,
@@ -36,12 +32,14 @@ import {
   SentimentBadge,
   StatusBadge,
   ApprovalBadge,
+  SecurityBadge,
+  mapPriorityToUrgency,
 } from './components/Badges';
 
 import {
+  fetchAiStatus,
   fetchTickets,
   fetchTicketStats,
-  fetchTicketById,
   processNewTicket,
   updateTicket,
   approveTicket,
@@ -51,6 +49,18 @@ import {
   downloadExportCsv,
   downloadExportJson,
 } from './api';
+
+const DEFAULT_MAX_MESSAGE_LENGTH = 10000;
+
+function cleanWhitespace(text) {
+  if (!text) return '';
+  return String(text)
+    .split(/\r?\n/)
+    .map((line) => line.replace(/[ \t]+/g, ' ').trim())
+    .join('\n')
+    .replace(/\n{3,}/g, '\n\n')
+    .trim();
+}
 
 export default function App() {
   // Theme State (Dark Mode)
@@ -83,6 +93,8 @@ export default function App() {
   // Core Data
   const [tickets, setTickets] = useState([]);
   const [stats, setStats] = useState(null);
+  const [aiStatus, setAiStatus] = useState(null);
+  const [aiErrorBanner, setAiErrorBanner] = useState(null);
   const [selectedTicketId, setSelectedTicketId] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -99,7 +111,7 @@ export default function App() {
   const [mockNoticeModal, setMockNoticeModal] = useState(null);
   const [toasts, setToasts] = useState([]);
 
-  // New Ticket Form State
+  // New Ticket Form State & Validation
   const [newTicketForm, setNewTicketForm] = useState({
     ticket_id: '',
     customer_name: '',
@@ -107,7 +119,10 @@ export default function App() {
     subject: '',
     message: '',
   });
+  const [formValidationError, setFormValidationError] = useState('');
   const [isSubmittingTicket, setIsSubmittingTicket] = useState(false);
+
+  const maxMessageLength = aiStatus?.max_message_length || DEFAULT_MAX_MESSAGE_LENGTH;
 
   // Toast Helper
   const addToast = (type, message, details = '') => {
@@ -126,19 +141,45 @@ export default function App() {
   const loadData = async (preserveSelectedId = null) => {
     try {
       setIsLoading(true);
-      const [ticketsData, statsData] = await Promise.all([
+      const [ticketsData, statsData, aiStatusData] = await Promise.all([
         fetchTickets(),
         fetchTicketStats(),
+        fetchAiStatus().catch((err) => ({
+          status: 'error',
+          configured: false,
+          message: err.message,
+          error_code: err.code || 'AI_STATUS_UNAVAILABLE',
+        })),
       ]);
 
       setTickets(ticketsData);
       setStats(statsData);
+      setAiStatus(aiStatusData);
+
+      if (aiStatusData && aiStatusData.status !== 'online') {
+        setAiErrorBanner({
+          title:
+            aiStatusData.status === 'missing_key'
+              ? 'Groq API Key Missing'
+              : aiStatusData.status === 'auth_error'
+              ? 'Groq API Authentication Failed'
+              : aiStatusData.status === 'rate_limited'
+              ? 'Groq API Rate Limit Reached'
+              : 'AI Service Connection Issue',
+          message: aiStatusData.message,
+          errorCode: aiStatusData.error_code,
+        });
+      } else {
+        setAiErrorBanner(null);
+      }
 
       const targetId = preserveSelectedId || selectedTicketId;
       if (targetId && ticketsData.some((t) => t.ticket_id === targetId)) {
         setSelectedTicketId(targetId);
       } else if (ticketsData.length > 0 && !preserveSelectedId) {
         setSelectedTicketId(ticketsData[0].ticket_id);
+      } else if (ticketsData.length === 0) {
+        setSelectedTicketId(null);
       }
     } catch (err) {
       console.error('Error loading tickets:', err);
@@ -195,9 +236,19 @@ export default function App() {
       if (selectedCategory !== 'all' && t.category !== selectedCategory)
         return false;
 
-      // 3. Dropdown priority filter
-      if (selectedPriority !== 'all' && t.priority !== selectedPriority)
-        return false;
+      // 3. Dropdown priority / P1-P2-P3 filter
+      if (selectedPriority !== 'all') {
+        const mappedTier = mapPriorityToUrgency(t.priority).tier;
+        if (selectedPriority === 'P1' && mappedTier !== 'P1') return false;
+        if (selectedPriority === 'P2' && mappedTier !== 'P2') return false;
+        if (selectedPriority === 'P3' && mappedTier !== 'P3') return false;
+        if (
+          ['critical', 'high', 'medium', 'low'].includes(selectedPriority) &&
+          t.priority !== selectedPriority
+        ) {
+          return false;
+        }
+      }
 
       // 4. Search query
       if (searchQuery.trim()) {
@@ -220,17 +271,22 @@ export default function App() {
   // TASK 1: Save Draft Response
   const handleSaveDraft = async () => {
     if (!selectedTicket) return;
+    const trimmedDraft = draftText.trim();
+    if (!trimmedDraft) {
+      addToast('error', 'Validation Error', 'Response draft cannot be empty.');
+      return;
+    }
     try {
       setIsSavingDraft(true);
       const updated = await updateTicket(selectedTicket.ticket_id, {
-        edited_response: draftText,
+        edited_response: trimmedDraft,
       });
 
-      // Update state
       setTickets((prev) =>
         prev.map((t) => (t.ticket_id === updated.ticket_id ? updated : t))
       );
-      setInitialDraftText(draftText);
+      setDraftText(trimmedDraft);
+      setInitialDraftText(trimmedDraft);
       addToast('success', 'Draft Saved', 'Response changes preserved in SQLite.');
     } catch (err) {
       addToast('error', 'Failed to save draft', err.message);
@@ -253,12 +309,20 @@ export default function App() {
         regenerated.edited_response || regenerated.generated_response || '';
       setDraftText(newText);
       setInitialDraftText(newText);
+      setAiErrorBanner(null);
       addToast(
         'info',
         'Draft Regenerated',
         'AI regenerated policy-grounded reply and saved to SQLite.'
       );
     } catch (err) {
+      if (err.code) {
+        setAiErrorBanner({
+          title: 'AI Service Error',
+          message: err.message,
+          errorCode: err.code,
+        });
+      }
       addToast('error', 'Regeneration failed', err.message);
     } finally {
       setIsRegenerating(false);
@@ -268,9 +332,14 @@ export default function App() {
   // TASK 2: Mock Approval & Send
   const handleApproveAndSend = async () => {
     if (!selectedTicket) return;
+    const trimmedDraft = draftText.trim();
+    if (!trimmedDraft) {
+      addToast('error', 'Validation Error', 'Cannot approve an empty response.');
+      return;
+    }
     try {
       setIsApproving(true);
-      const result = await approveTicket(selectedTicket.ticket_id, draftText);
+      const result = await approveTicket(selectedTicket.ticket_id, trimmedDraft);
       const updatedTicket = result.ticket;
 
       // Update tickets list and stats
@@ -381,19 +450,84 @@ export default function App() {
     }
   };
 
-  // Handle New Ticket Ingestion
+  // Handle New Ticket Ingestion with Input Length & Whitespace Validation
+  const cleanedMessagePreview = useMemo(
+    () => cleanWhitespace(newTicketForm.message),
+    [newTicketForm.message]
+  );
+
+  const openNewTicketModal = () => {
+    setFormValidationError('');
+    setNewTicketForm({
+      ticket_id: `TCK-${Math.floor(1000 + Math.random() * 9000)}`,
+      customer_name: '',
+      customer_email: '',
+      subject: '',
+      message: '',
+    });
+    setShowNewTicketModal(true);
+  };
+
+  const handleResetFilters = () => {
+    setActiveTab('all');
+    setSelectedCategory('all');
+    setSelectedPriority('all');
+    setSearchQuery('');
+  };
+
   const handleCreateTicketSubmit = async (e) => {
     e.preventDefault();
-    if (!newTicketForm.ticket_id || !newTicketForm.customer_email) {
-      addToast('error', 'Missing Fields', 'Ticket ID and Email are required.');
+    setFormValidationError('');
+
+    const cleanedPayload = {
+      ticket_id: cleanWhitespace(newTicketForm.ticket_id),
+      customer_name: cleanWhitespace(newTicketForm.customer_name),
+      customer_email: cleanWhitespace(newTicketForm.customer_email),
+      subject: cleanWhitespace(newTicketForm.subject),
+      message: cleanWhitespace(newTicketForm.message),
+    };
+
+    if (!cleanedPayload.ticket_id || !cleanedPayload.customer_name || !cleanedPayload.customer_email) {
+      const msg = 'Ticket ID, Customer Name, and Customer Email are required.';
+      setFormValidationError(msg);
+      addToast('error', 'Validation Error', msg);
+      return;
+    }
+
+    if (!cleanedPayload.customer_email.includes('@')) {
+      const msg = 'Please enter a valid customer email address.';
+      setFormValidationError(msg);
+      addToast('error', 'Validation Error', msg);
+      return;
+    }
+
+    if (!cleanedPayload.subject) {
+      const msg = 'Ticket subject cannot be empty.';
+      setFormValidationError(msg);
+      addToast('error', 'Validation Error', msg);
+      return;
+    }
+
+    if (!cleanedPayload.message) {
+      const msg = 'Ticket message cannot be empty or contain only whitespace.';
+      setFormValidationError(msg);
+      addToast('error', 'Invalid Input', msg);
+      return;
+    }
+
+    if (cleanedPayload.message.length > maxMessageLength) {
+      const msg = `Ticket message exceeds maximum allowed length of ${maxMessageLength.toLocaleString()} characters (currently ${cleanedPayload.message.length.toLocaleString()} characters).`;
+      setFormValidationError(msg);
+      addToast('error', 'Message Too Long', msg);
       return;
     }
 
     try {
       setIsSubmittingTicket(true);
-      const result = await processNewTicket(newTicketForm);
+      const result = await processNewTicket(cleanedPayload);
       await loadData(result.ticket.ticket_id);
       setShowNewTicketModal(false);
+      setFormValidationError('');
       setNewTicketForm({
         ticket_id: '',
         customer_name: '',
@@ -407,6 +541,14 @@ export default function App() {
         `Ticket ${result.ticket.ticket_id} ingested, analyzed, and persisted.`
       );
     } catch (err) {
+      setFormValidationError(err.message);
+      if (err.code) {
+        setAiErrorBanner({
+          title: 'AI Processing Error',
+          message: err.message,
+          errorCode: err.code,
+        });
+      }
       addToast('error', 'Failed to create ticket', err.message);
     } finally {
       setIsSubmittingTicket(false);
@@ -420,18 +562,10 @@ export default function App() {
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         stats={stats}
+        aiStatus={aiStatus}
         isDarkMode={isDarkMode}
         toggleTheme={toggleTheme}
-        onOpenNewTicketModal={() => {
-          setNewTicketForm({
-            ticket_id: `TCK-${Math.floor(1000 + Math.random() * 9000)}`,
-            customer_name: '',
-            customer_email: '',
-            subject: '',
-            message: '',
-          });
-          setShowNewTicketModal(true);
-        }}
+        onOpenNewTicketModal={openNewTicketModal}
       />
 
       {/* Main Content Area */}
@@ -476,16 +610,7 @@ export default function App() {
 
             <button
               className="btn btn-primary"
-              onClick={() => {
-                setNewTicketForm({
-                  ticket_id: `TCK-${Math.floor(1000 + Math.random() * 9000)}`,
-                  customer_name: '',
-                  customer_email: '',
-                  subject: '',
-                  message: '',
-                });
-                setShowNewTicketModal(true);
-              }}
+              onClick={openNewTicketModal}
             >
               <PlusCircle size={15} />
               <span>New Ticket</span>
@@ -505,6 +630,32 @@ export default function App() {
 
         {/* Dashboard Statistics Bar */}
         <StatsCards stats={stats} />
+
+        {/* API Key / AI Service Error Alert Banner */}
+        {aiErrorBanner && (
+          <div className="alert-banner-danger ai-status-banner" role="alert">
+            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+              <AlertCircle size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+              <div>
+                <h4>{aiErrorBanner.title}</h4>
+                <p>{aiErrorBanner.message}</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setAiErrorBanner(null)}
+              style={{
+                background: 'none',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'inherit',
+                padding: '2px',
+              }}
+              aria-label="Dismiss AI error notice"
+            >
+              <X size={16} />
+            </button>
+          </div>
+        )}
 
         {/* Reports View OR Workspace Inbox */}
         {activeTab === 'reports' ? (
@@ -676,11 +827,12 @@ export default function App() {
                     value={selectedPriority}
                     onChange={(e) => setSelectedPriority(e.target.value)}
                   >
-                    <option value="all">All Priorities</option>
-                    <option value="critical">Critical</option>
-                    <option value="high">High</option>
-                    <option value="medium">Medium</option>
-                    <option value="low">Low</option>
+                    <option value="all">All Urgencies (P1–P3)</option>
+                    <option value="P1">P1 — Critical & High</option>
+                    <option value="critical">P1 — Critical Only</option>
+                    <option value="high">P1 — High Only</option>
+                    <option value="P2">P2 — Medium</option>
+                    <option value="P3">P3 — Low</option>
                   </select>
                 </div>
               </div>
@@ -692,17 +844,48 @@ export default function App() {
                     <Clock className="animate-spin" size={20} />
                     <span>Loading tickets...</span>
                   </div>
+                ) : tickets.length === 0 ? (
+                  <div className="empty-state">
+                    <div className="empty-state-icon">
+                      <Bot size={24} />
+                    </div>
+                    <h4 style={{ fontSize: '14px', fontWeight: 600 }}>
+                      No tickets in inbox
+                    </h4>
+                    <p style={{ fontSize: '12px', maxWidth: '280px' }}>
+                      Your support queue is empty. Create a new customer ticket or
+                      seed sample tickets to run AI triage.
+                    </p>
+                    <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+                      <button className="btn btn-primary" onClick={openNewTicketModal}>
+                        <PlusCircle size={14} />
+                        <span>New Ticket</span>
+                      </button>
+                      <button className="btn btn-secondary" onClick={handleSeedSamples}>
+                        <Sparkles size={14} />
+                        <span>Seed Samples</span>
+                      </button>
+                    </div>
+                  </div>
                 ) : filteredTickets.length === 0 ? (
                   <div className="empty-state">
                     <div className="empty-state-icon">
-                      <AlertCircle size={24} />
+                      <Search size={22} />
                     </div>
                     <h4 style={{ fontSize: '14px', fontWeight: 600 }}>
-                      No tickets found
+                      No matching search results
                     </h4>
-                    <p style={{ fontSize: '12px' }}>
-                      Try adjusting your search or filters, or seed demo samples.
+                    <p style={{ fontSize: '12px', maxWidth: '280px' }}>
+                      No tickets match your current search query or category/urgency
+                      filters.
                     </p>
+                    <button
+                      className="btn btn-secondary"
+                      onClick={handleResetFilters}
+                    >
+                      <RotateCcw size={14} />
+                      <span>Clear Search & Filters</span>
+                    </button>
                   </div>
                 ) : (
                   filteredTickets.map((ticket) => {
@@ -740,6 +923,9 @@ export default function App() {
                           <PriorityBadge priority={ticket.priority} />
                           <SentimentBadge sentiment={ticket.sentiment} />
                           <StatusBadge status={ticket.ticket_status} />
+                          {ticket.prompt_injection_detected && (
+                            <SecurityBadge detected={true} />
+                          )}
                           {ticket.approval_status === 'approved' && (
                             <ApprovalBadge approvalStatus="approved" />
                           )}
@@ -798,7 +984,7 @@ export default function App() {
                           style={{
                             fontSize: '18px',
                             fontWeight: 700,
-                            color: '#1e293b',
+                            color: 'var(--text-main)',
                             fontFamily: 'monospace',
                           }}
                         >
@@ -808,7 +994,13 @@ export default function App() {
                         <ApprovalBadge
                           approvalStatus={selectedTicket.approval_status}
                         />
-                        <PriorityBadge priority={selectedTicket.priority} />
+                        <PriorityBadge
+                          priority={selectedTicket.priority}
+                          showOriginal={true}
+                        />
+                        {selectedTicket.prompt_injection_detected && (
+                          <SecurityBadge detected={true} />
+                        )}
                       </div>
 
                       <div style={{ display: 'flex', gap: '8px' }}>
@@ -849,9 +1041,9 @@ export default function App() {
                         </span>
                       </div>
                       <div className="customer-info-item">
-                        <span className="info-label">Submitted At</span>
-                        <span className="info-val" style={{ fontSize: '12px' }}>
-                          {new Date(selectedTicket.created_at).toLocaleString()}
+                        <span className="info-label">Urgency / Original Priority</span>
+                        <span className="info-val" style={{ textTransform: 'capitalize' }}>
+                          {mapPriorityToUrgency(selectedTicket.priority).tier} ({selectedTicket.priority || 'medium'})
                         </span>
                       </div>
                       <div className="customer-info-item">
@@ -887,67 +1079,116 @@ export default function App() {
                         <Sparkles size={16} style={{ color: '#2563eb' }} />
                         <span>AI Triage & Extracted Entities</span>
                       </div>
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <CategoryBadge category={selectedTicket.category} />
-                        <SentimentBadge sentiment={selectedTicket.sentiment} />
-                      </div>
-                    </div>
-
-                    {/* Extracted Entities Chips */}
-                    <div>
-                      <span
-                        className="info-label"
-                        style={{ display: 'block', marginBottom: '8px' }}
-                      >
-                        Identified Entities
-                      </span>
-                      <div className="entity-chips-container">
-                        {selectedTicket.extracted_entities &&
-                        Object.keys(selectedTicket.extracted_entities).some(
-                          (k) => selectedTicket.extracted_entities[k]
-                        ) ? (
-                          Object.entries(selectedTicket.extracted_entities)
-                            .filter(([_, val]) => val)
-                            .map(([key, val]) => (
-                              <div key={key} className="entity-chip">
-                                <span className="entity-chip-key">
-                                  {key.replace('_', ' ')}:
-                                </span>
-                                <span className="entity-chip-val">{val}</span>
-                              </div>
-                            ))
-                        ) : (
-                          <span
-                            style={{
-                              fontSize: '12px',
-                              color: '#94a3b8',
-                              fontStyle: 'italic',
-                            }}
-                          >
-                            No specific order ID or error code identified in message.
-                          </span>
+                      <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                        {selectedTicket.category && (
+                          <CategoryBadge category={selectedTicket.category} />
+                        )}
+                        {selectedTicket.secondary_categories?.map((secCat) => (
+                          <CategoryBadge key={secCat} category={secCat} />
+                        ))}
+                        {selectedTicket.sentiment && (
+                          <SentimentBadge sentiment={selectedTicket.sentiment} />
                         )}
                       </div>
                     </div>
 
-                    {/* Missing Entities Warning Banner */}
-                    {selectedTicket.missing_entities &&
-                      selectedTicket.missing_entities.length > 0 && (
-                        <div className="alert-banner-warning">
-                          <AlertTriangle size={18} style={{ flexShrink: 0 }} />
-                          <div>
-                            <h4>Missing Information Detected</h4>
-                            <p>
-                              Customer must provide:{' '}
-                              <strong>
-                                {selectedTicket.missing_entities.join(', ')}
-                              </strong>
-                              . Draft response has been policy-grounded to politely
-                              request this information.
-                            </p>
+                    {!selectedTicket.category || !selectedTicket.sentiment ? (
+                      <div className="empty-state-compact">
+                        <Sparkles size={20} style={{ color: 'var(--primary-600)' }} />
+                        <strong style={{ fontSize: '13px', color: 'var(--text-main)' }}>
+                          No AI Analysis Available Yet
+                        </strong>
+                        <p style={{ fontSize: '12px' }}>
+                          Run AI triage to classify category, urgency, sentiment, and
+                          extract customer entities.
+                        </p>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={handleRegenerateDraft}
+                          disabled={isRegenerating}
+                        >
+                          <RotateCcw size={14} />
+                          <span>{isRegenerating ? 'Analyzing...' : 'Run AI Analysis'}</span>
+                        </button>
+                      </div>
+                    ) : (
+                      <>
+                        {/* Security Guardrail Alert if Prompt Injection Detected */}
+                        {selectedTicket.prompt_injection_detected && (
+                          <div className="alert-banner-danger">
+                            <div style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
+                              <ShieldCheck size={18} style={{ flexShrink: 0, marginTop: '2px' }} />
+                              <div>
+                                <h4>Prompt Injection Attempt Neutralized</h4>
+                                <p>
+                                  Customer input contained instruction-override or unauthorized
+                                  refund directives. Message was strictly isolated as untrusted data;
+                                  company policy remained unchanged and human review is required.
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Extracted Entities Chips */}
+                        <div>
+                          <span
+                            className="info-label"
+                            style={{ display: 'block', marginBottom: '8px' }}
+                          >
+                            Identified Entities
+                          </span>
+                          <div className="entity-chips-container">
+                            {selectedTicket.extracted_entities &&
+                            Object.keys(selectedTicket.extracted_entities).some(
+                              (k) => selectedTicket.extracted_entities[k]
+                            ) ? (
+                              Object.entries(selectedTicket.extracted_entities)
+                                .filter(([_, val]) => val)
+                                .map(([key, val]) => (
+                                  <div key={key} className="entity-chip">
+                                    <span className="entity-chip-key">
+                                      {key.replace('_', ' ')}:
+                                    </span>
+                                    <span className="entity-chip-val">{val}</span>
+                                  </div>
+                                ))
+                            ) : (
+                              <span
+                                style={{
+                                  fontSize: '12px',
+                                  color: '#94a3b8',
+                                  fontStyle: 'italic',
+                                }}
+                              >
+                                No specific order ID or error code identified in message.
+                              </span>
+                            )}
                           </div>
                         </div>
-                      )}
+
+                        {/* Missing Entities Warning Banner */}
+                        {selectedTicket.missing_entities &&
+                          selectedTicket.missing_entities.length > 0 && (
+                            <div className="alert-banner-warning">
+                              <AlertTriangle size={18} style={{ flexShrink: 0 }} />
+                              <div>
+                                <h4>Missing Information / Clarification Required</h4>
+                                <p>
+                                  Customer must provide:{' '}
+                                  <strong>
+                                    {selectedTicket.missing_entities.join(', ')}
+                                  </strong>
+                                  .{' '}
+                                  {selectedTicket.analysis_reason
+                                    ? selectedTicket.analysis_reason
+                                    : 'Draft response has been policy-grounded to politely request this information.'}
+                                </p>
+                              </div>
+                            </div>
+                          )}
+                      </>
+                    )}
                   </div>
 
                   {/* Response Copilot & Human-In-The-Loop Card */}
@@ -997,6 +1238,22 @@ export default function App() {
                         </span>
                       </div>
                     )}
+
+                    {/* Empty State when No Generated Response Exists */}
+                    {!selectedTicket.generated_response &&
+                      !selectedTicket.edited_response &&
+                      !draftText.trim() && (
+                        <div className="empty-state-compact">
+                          <Bot size={20} style={{ color: 'var(--primary-600)' }} />
+                          <strong style={{ fontSize: '13px', color: 'var(--text-main)' }}>
+                            No Generated Response Available
+                          </strong>
+                          <p style={{ fontSize: '12px' }}>
+                            Click &ldquo;Regenerate Draft&rdquo; to generate a policy-grounded
+                            AI reply, or write your response directly below.
+                          </p>
+                        </div>
+                      )}
 
                     {/* TASK 1: Editable Response Textarea */}
                     <textarea
@@ -1197,21 +1454,28 @@ export default function App() {
               </button>
             </div>
 
-            <form onSubmit={handleCreateTicketSubmit}>
+            <form onSubmit={handleCreateTicketSubmit} noValidate>
               <div className="modal-body">
+                {formValidationError && (
+                  <div className="form-error-box" role="alert">
+                    <AlertCircle size={16} style={{ flexShrink: 0, marginTop: '1px' }} />
+                    <span>{formValidationError}</span>
+                  </div>
+                )}
+
                 <div className="form-group">
                   <label className="form-label">Ticket ID</label>
                   <input
                     type="text"
                     className="form-input"
                     value={newTicketForm.ticket_id}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      setFormValidationError('');
                       setNewTicketForm({
                         ...newTicketForm,
                         ticket_id: e.target.value,
-                      })
-                    }
-                    required
+                      });
+                    }}
                   />
                 </div>
 
@@ -1229,13 +1493,13 @@ export default function App() {
                       className="form-input"
                       placeholder="e.g. Sarah Connor"
                       value={newTicketForm.customer_name}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        setFormValidationError('');
                         setNewTicketForm({
                           ...newTicketForm,
                           customer_name: e.target.value,
-                        })
-                      }
-                      required
+                        });
+                      }}
                     />
                   </div>
 
@@ -1246,13 +1510,13 @@ export default function App() {
                       className="form-input"
                       placeholder="e.g. sarah@example.com"
                       value={newTicketForm.customer_email}
-                      onChange={(e) =>
+                      onChange={(e) => {
+                        setFormValidationError('');
                         setNewTicketForm({
                           ...newTicketForm,
                           customer_email: e.target.value,
-                        })
-                      }
-                      required
+                        });
+                      }}
                     />
                   </div>
                 </div>
@@ -1264,30 +1528,48 @@ export default function App() {
                     className="form-input"
                     placeholder="e.g. Return request for defective item"
                     value={newTicketForm.subject}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      setFormValidationError('');
                       setNewTicketForm({
                         ...newTicketForm,
                         subject: e.target.value,
-                      })
-                    }
-                    required
+                      });
+                    }}
                   />
                 </div>
 
                 <div className="form-group">
-                  <label className="form-label">Customer Message</label>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                    }}
+                  >
+                    <label className="form-label">Customer Message</label>
+                    <span
+                      className={`char-counter ${
+                        cleanedMessagePreview.length > maxMessageLength
+                          ? 'over-limit'
+                          : ''
+                      }`}
+                    >
+                      {cleanedMessagePreview.length.toLocaleString()} /{' '}
+                      {maxMessageLength.toLocaleString()} chars
+                    </span>
+                  </div>
                   <textarea
                     className="form-textarea"
                     rows={4}
                     placeholder="Paste the customer email or chat inquiry here..."
                     value={newTicketForm.message}
-                    onChange={(e) =>
+                    onChange={(e) => {
+                      setFormValidationError('');
                       setNewTicketForm({
                         ...newTicketForm,
                         message: e.target.value,
-                      })
-                    }
-                    required
+                      });
+                    }}
                   />
                 </div>
               </div>

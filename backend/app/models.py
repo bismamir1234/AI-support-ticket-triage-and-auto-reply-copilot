@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from sqlalchemy import Column, String, Text, DateTime, JSON
+from sqlalchemy import Boolean, Column, String, Text, DateTime, JSON
 from app.database import Base
 
 
@@ -19,12 +19,19 @@ class Ticket(Base):
 
     # Classification & Analysis
     category = Column(String(100), nullable=False, index=True)
+    secondary_categories = Column(JSON, nullable=True, default=list)
     priority = Column(String(50), nullable=False, default="medium")
     sentiment = Column(String(50), nullable=False, default="Neutral")
 
-    # Entities
+    # Entities & Clarification
     extracted_entities = Column(JSON, nullable=True, default=dict)
     missing_entities = Column(JSON, nullable=True, default=list)
+    needs_clarification = Column(Boolean, nullable=False, default=False)
+    analysis_reason = Column(Text, nullable=True)
+
+    # Security Guardrails
+    prompt_injection_detected = Column(Boolean, nullable=False, default=False)
+    security_flags = Column(JSON, nullable=True, default=list)
 
     # Responses & Human-In-The-Loop Approval
     generated_response = Column(Text, nullable=True)
@@ -61,3 +68,12 @@ class Ticket(Base):
     @property
     def final_response(self):
         return self.edited_response if self.edited_response else (self.generated_response or "")
+
+    @property
+    def urgency_tier(self) -> str:
+        prio = (self.priority or "medium").lower()
+        if prio in ("critical", "high"):
+            return "P1"
+        if prio == "medium":
+            return "P2"
+        return "P3"

@@ -54,10 +54,15 @@ class TicketDatabaseService:
             existing_ticket.subject = req.subject
             existing_ticket.original_message = req.message
             existing_ticket.category = analysis.category.value
+            existing_ticket.secondary_categories = analysis.secondary_categories
             existing_ticket.priority = analysis.priority.value
             existing_ticket.sentiment = analysis.sentiment.value
             existing_ticket.extracted_entities = analysis.entities.model_dump()
             existing_ticket.missing_entities = analysis.missing_entities
+            existing_ticket.needs_clarification = analysis.needs_clarification
+            existing_ticket.analysis_reason = analysis.reason
+            existing_ticket.prompt_injection_detected = analysis.prompt_injection_detected
+            existing_ticket.security_flags = analysis.security_flags
             existing_ticket.generated_response = auto_reply_response.suggested_reply
             existing_ticket.updated_at = now
             ticket_model = existing_ticket
@@ -69,10 +74,15 @@ class TicketDatabaseService:
                 subject=req.subject,
                 original_message=req.message,
                 category=analysis.category.value,
+                secondary_categories=analysis.secondary_categories,
                 priority=analysis.priority.value,
                 sentiment=analysis.sentiment.value,
                 extracted_entities=analysis.entities.model_dump(),
                 missing_entities=analysis.missing_entities,
+                needs_clarification=analysis.needs_clarification,
+                analysis_reason=analysis.reason,
+                prompt_injection_detected=analysis.prompt_injection_detected,
+                security_flags=analysis.security_flags,
                 generated_response=auto_reply_response.suggested_reply,
                 edited_response=None,
                 approval_status="pending",
@@ -192,10 +202,15 @@ class TicketDatabaseService:
         ticket.edited_response = None  # Reset edited response so newly regenerated draft is active
         ticket.approval_status = "pending"  # Needs review again
         ticket.category = analysis.category.value
+        ticket.secondary_categories = analysis.secondary_categories
         ticket.priority = analysis.priority.value
         ticket.sentiment = analysis.sentiment.value
         ticket.extracted_entities = analysis.entities.model_dump()
         ticket.missing_entities = analysis.missing_entities
+        ticket.needs_clarification = analysis.needs_clarification
+        ticket.analysis_reason = analysis.reason
+        ticket.prompt_injection_detected = analysis.prompt_injection_detected
+        ticket.security_flags = analysis.security_flags
         ticket.updated_at = datetime.now(timezone.utc)
         db.commit()
         db.refresh(ticket)
@@ -350,10 +365,16 @@ class TicketDatabaseService:
                 "subject": t.subject,
                 "original_message": t.original_message,
                 "category": t.category,
+                "secondary_categories": t.secondary_categories or [],
                 "priority": t.priority,
+                "urgency_tier": t.urgency_tier,
                 "sentiment": t.sentiment,
                 "extracted_entities": t.extracted_entities or {},
                 "missing_entities": t.missing_entities or [],
+                "needs_clarification": bool(t.needs_clarification or (t.missing_entities and len(t.missing_entities) > 0)),
+                "analysis_reason": t.analysis_reason,
+                "prompt_injection_detected": bool(t.prompt_injection_detected),
+                "security_flags": t.security_flags or [],
                 "generated_response": t.generated_response,
                 "edited_response": t.edited_response,
                 "final_response": t.final_response,
@@ -363,11 +384,16 @@ class TicketDatabaseService:
                 "updated_at": t.updated_at.isoformat() if t.updated_at else None,
                 "analysis_details": {
                     "category": t.category,
+                    "secondary_categories": t.secondary_categories or [],
                     "priority": t.priority,
+                    "urgency_tier": t.urgency_tier,
                     "sentiment": t.sentiment,
                     "extracted_entities": t.extracted_entities or {},
                     "missing_entities": t.missing_entities or [],
-                    "needs_clarification": bool(t.missing_entities and len(t.missing_entities) > 0),
+                    "needs_clarification": bool(t.needs_clarification or (t.missing_entities and len(t.missing_entities) > 0)),
+                    "reason": t.analysis_reason,
+                    "prompt_injection_detected": bool(t.prompt_injection_detected),
+                    "security_flags": t.security_flags or [],
                 },
                 "response_details": {
                     "generated_draft": t.generated_response,
