@@ -15,16 +15,19 @@ import {
 
 export function mapPriorityToUrgency(priority) {
   const prio = (priority || 'medium').toLowerCase().trim();
-  if (prio === 'critical') {
-    return { tier: 'P1', originalLabel: 'Critical', cssClass: 'badge-priority-p1' };
+  if (prio === 'critical' || prio === 'p1') {
+    return { tier: 'P1', originalLabel: 'Critical / P1', cssClass: 'badge-priority-p1' };
   }
   if (prio === 'high') {
     return { tier: 'P1', originalLabel: 'High', cssClass: 'badge-priority-p1' };
   }
-  if (prio === 'medium') {
-    return { tier: 'P2', originalLabel: 'Medium', cssClass: 'badge-priority-p2' };
+  if (prio === 'medium' || prio === 'p2') {
+    return { tier: 'P2', originalLabel: 'Medium / P2', cssClass: 'badge-priority-p2' };
   }
-  return { tier: 'P3', originalLabel: 'Low', cssClass: 'badge-priority-p3' };
+  if (prio === 'low' || prio === 'p3') {
+    return { tier: 'P3', originalLabel: 'Low / P3', cssClass: 'badge-priority-p3' };
+  }
+  return { tier: 'P4', originalLabel: 'Info / P4', cssClass: 'badge-priority-p4' };
 }
 
 export function CategoryBadge({ category }) {
@@ -101,6 +104,14 @@ export function SentimentBadge({ sentiment }) {
       <span className="badge badge-sent-urgent">
         <Flame size={12} />
         Highly Urgent
+      </span>
+    );
+  }
+  if (s.includes('angry')) {
+    return (
+      <span className="badge badge-sent-frustrated">
+        <Frown size={12} />
+        Angry
       </span>
     );
   }

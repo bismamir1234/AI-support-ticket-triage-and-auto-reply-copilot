@@ -317,3 +317,64 @@ def test_json_export_complete_analysis_and_response_details():
     assert target_ticket["edited_response"] == "Dear Sophia, the charge has been credited back to your account in full. Thank you."
     assert target_ticket["final_response"] == "Dear Sophia, the charge has been credited back to your account in full. Thank you."
 
+
+def test_batch_log_csv_export():
+    """Verify batch ticket log CSV export contains the 10 required fields:
+    Ticket ID, Customer inquiry, Classification, Priority, Sentiment, Category,
+    AI-generated response, Agent-edited response, Approval status, Timestamp.
+    """
+    res = client.get("/api/v1/tickets/export/batch-csv")
+    assert res.status_code == 200
+    assert "text/csv" in res.headers["content-type"]
+    assert 'filename="batch_tickets_log.csv"' in res.headers["content-disposition"]
+
+    rows = list(csv.reader(io.StringIO(res.text)))
+    expected_batch_headers = [
+        "Ticket ID",
+        "Customer inquiry",
+        "Classification",
+        "Priority",
+        "Sentiment",
+        "Category",
+        "AI-generated response",
+        "Agent-edited response",
+        "Approval status",
+        "Timestamp",
+    ]
+    assert len(rows) > 0
+    assert rows[0] == expected_batch_headers
+
+    # Also test query parameter ?format=batch_log on /export/csv
+    res_param = client.get("/api/v1/tickets/export/csv?format=batch_log")
+    assert res_param.status_code == 200
+    rows_param = list(csv.reader(io.StringIO(res_param.text)))
+    assert rows_param[0] == expected_batch_headers
+
+
+def test_reject_response_workflow():
+    """Verify human agent rejection workflow:
+    - Post rejection via /api/v1/tickets/{id}/reject
+    - Updates approval_status to 'rejected' in SQLite
+    - Reflected in subsequent GET requests and stats
+    """
+    ticket_payload = {
+        "ticket_id": "P6-REJ-001",
+        "customer_name": "Oliver Queen",
+        "customer_email": "oliver@example.com",
+        "subject": "System downtime inquiry",
+        "message": "When will the portal be online again? Please confirm.",
+    }
+    create_res = client.post("/api/v1/tickets/process", json=ticket_payload)
+    assert create_res.status_code == 201
+
+    # Call reject endpoint
+    rej_res = client.post("/api/v1/tickets/P6-REJ-001/reject")
+    assert rej_res.status_code == 200
+    rej_data = rej_res.json()
+    assert rej_data["approval_status"] == "rejected"
+
+    # Fetch directly to verify persistence
+    get_res = client.get("/api/v1/tickets/P6-REJ-001")
+    assert get_res.status_code == 200
+    assert get_res.json()["approval_status"] == "rejected"
+

@@ -22,6 +22,7 @@ import {
   Tag,
   Sun,
   Moon,
+  XCircle,
 } from 'lucide-react';
 
 import Sidebar from './components/Sidebar';
@@ -43,10 +44,12 @@ import {
   processNewTicket,
   updateTicket,
   approveTicket,
+  rejectTicket,
   resolveTicket,
   regenerateReply,
   seedSampleTickets,
   downloadExportCsv,
+  downloadBatchLogCsv,
   downloadExportJson,
 } from './api';
 
@@ -374,6 +377,35 @@ export default function App() {
     }
   };
 
+  // Human-In-The-Loop: Reject Response Draft
+  const handleRejectDraft = async () => {
+    if (!selectedTicket) return;
+    try {
+      setIsApproving(true);
+      const updatedTicket = await rejectTicket(selectedTicket.ticket_id);
+      setTickets((prev) =>
+        prev.map((t) =>
+          t.ticket_id === updatedTicket.ticket_id ? updatedTicket : t
+        )
+      );
+      setSelectedTicket(updatedTicket);
+
+      // Refresh dashboard stats
+      const newStats = await fetchTicketStats();
+      setStats(newStats);
+
+      addToast(
+        'warning',
+        'Response Draft Rejected',
+        `Ticket ${selectedTicket.ticket_id} draft rejected. Marked for manual agent handling.`
+      );
+    } catch (err) {
+      addToast('error', 'Rejection failed', err.message);
+    } finally {
+      setIsApproving(false);
+    }
+  };
+
   // TASK 3: Mark Resolved
   const handleMarkResolved = async () => {
     if (!selectedTicket) return;
@@ -415,6 +447,20 @@ export default function App() {
       );
     } catch (err) {
       addToast('error', 'Export CSV Failed', err.message);
+    }
+  };
+
+  // Batch Ticket Processing Log CSV Export
+  const handleExportBatchCsv = async () => {
+    try {
+      await downloadBatchLogCsv();
+      addToast(
+        'success',
+        'Batch Log CSV Downloaded',
+        'Exported complete batch log with Ticket ID, Customer inquiry, Classification, Priority, Sentiment, Category, AI response, Edited response, Approval status, and Timestamp.'
+      );
+    } catch (err) {
+      addToast('error', 'Export Batch CSV Failed', err.message);
     }
   };
 
@@ -601,6 +647,15 @@ export default function App() {
 
             <button
               className="btn btn-secondary"
+              onClick={handleExportBatchCsv}
+              title="Download comprehensive batch ticket processing log CSV"
+            >
+              <Download size={15} />
+              <span>Batch Log CSV</span>
+            </button>
+
+            <button
+              className="btn btn-secondary"
               onClick={handleExportJson}
               title="Download complete JSON ticket analysis"
             >
@@ -671,12 +726,16 @@ export default function App() {
                   metrics, missing entities, and final responses.
                 </p>
               </div>
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button className="btn btn-primary" onClick={handleExportCsv}>
+              <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <button className="btn btn-primary" onClick={handleExportCsv} title="Download CSV with standard Phase 6 headers">
                   <Download size={16} />
                   <span>Download CSV</span>
                 </button>
-                <button className="btn btn-secondary" onClick={handleExportJson}>
+                <button className="btn btn-secondary" onClick={handleExportBatchCsv} title="Download comprehensive 10-field batch processing log">
+                  <Download size={16} />
+                  <span>Batch Log CSV</span>
+                </button>
+                <button className="btn btn-secondary" onClick={handleExportJson} title="Download complete JSON analysis and response details">
                   <FileJson size={16} />
                   <span>Download JSON</span>
                 </button>
@@ -1239,6 +1298,29 @@ export default function App() {
                       </div>
                     )}
 
+                    {/* Rejection Notice if Rejected */}
+                    {selectedTicket.approval_status === 'rejected' && (
+                      <div
+                        className="mock-alert-banner"
+                        style={{
+                          backgroundColor: '#fef2f2',
+                          borderColor: '#fca5a5',
+                          color: '#991b1b',
+                        }}
+                      >
+                        <span
+                          className="mock-alert-badge"
+                          style={{ backgroundColor: '#ef4444', color: '#fff' }}
+                        >
+                          Rejected
+                        </span>
+                        <span>
+                          <strong>Draft Rejected:</strong> This AI draft was rejected by the support agent.
+                          The ticket is held for manual agent drafting and handling.
+                        </span>
+                      </div>
+                    )}
+
                     {/* Empty State when No Generated Response Exists */}
                     {!selectedTicket.generated_response &&
                       !selectedTicket.edited_response &&
@@ -1307,6 +1389,18 @@ export default function App() {
                           <span>
                             {isSavingDraft ? 'Saving...' : 'Save Draft'}
                           </span>
+                        </button>
+
+                        {/* Reject Response Draft */}
+                        <button
+                          className="btn btn-secondary"
+                          onClick={handleRejectDraft}
+                          disabled={isApproving}
+                          style={{ borderColor: '#ef4444', color: '#ef4444' }}
+                          title="Reject AI draft response and flag ticket for manual agent handling"
+                        >
+                          <XCircle size={14} />
+                          <span>Reject Draft</span>
                         </button>
 
                         {/* TASK 2: Approve & Send (Mock) */}

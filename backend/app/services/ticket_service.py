@@ -270,6 +270,20 @@ class TicketDatabaseService:
             message=f"Ticket {ticket_id} successfully marked as resolved.",
         )
 
+    def reject_ticket(
+        self, db: Session, ticket_id: str, reason: Optional[str] = None
+    ) -> Optional[TicketDBResponse]:
+        """Reject auto-reply draft and record rejected approval status in SQLite."""
+        record = db.query(Ticket).filter(Ticket.ticket_id == ticket_id).first()
+        if not record:
+            return None
+
+        record.approval_status = "rejected"
+        record.updated_at = datetime.now(timezone.utc)
+        db.commit()
+        db.refresh(record)
+        return TicketDBResponse.model_validate(record)
+
     def export_tickets_csv(
         self,
         db: Session,
@@ -277,16 +291,10 @@ class TicketDatabaseService:
         priority: Optional[str] = None,
         ticket_status: Optional[str] = None,
         approval_status: Optional[str] = None,
+        format_type: str = "standard",
     ) -> str:
-        """Export tickets to CSV format containing exact required fields:
-        - Ticket ID
-        - Customer
-        - Category
-        - Priority
-        - Sentiment
-        - Missing entities
-        - Status
-        - Final response
+        """Export tickets to CSV format.
+        Supports standard Phase 6 headers and comprehensive batch ticket processing log headers.
         """
         query = db.query(Ticket)
         if category:
@@ -303,7 +311,38 @@ class TicketDatabaseService:
         output = io.StringIO()
         writer = csv.writer(output, quoting=csv.QUOTE_MINIMAL)
 
-        # Header row
+        if format_type in ["batch", "batch_log", "batch_tickets_log"]:
+            # Batch Ticket Processing Log Headers (Task 3 specification)
+            writer.writerow([
+                "Ticket ID",
+                "Customer inquiry",
+                "Classification",
+                "Priority",
+                "Sentiment",
+                "Category",
+                "AI-generated response",
+                "Agent-edited response",
+                "Approval status",
+                "Timestamp",
+            ])
+            for t in tickets:
+                classification_str = f"{t.category.title()} ({t.priority.upper()})"
+                timestamp_str = t.created_at.strftime("%Y-%m-%d %H:%M:%S UTC") if t.created_at else ""
+                writer.writerow([
+                    t.ticket_id,
+                    t.original_message or "",
+                    classification_str,
+                    t.priority,
+                    t.sentiment,
+                    t.category,
+                    t.generated_response or "",
+                    t.edited_response or "",
+                    t.approval_status,
+                    timestamp_str,
+                ])
+            return output.getvalue()
+
+        # Standard Phase 6 Header row
         writer.writerow([
             "Ticket ID",
             "Customer",

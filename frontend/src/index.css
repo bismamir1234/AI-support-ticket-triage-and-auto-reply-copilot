@@ -533,6 +533,13 @@ body {
   font-weight: 600;
 }
 
+.badge-priority-p4 {
+  background: #f0fdf4;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+  font-weight: 600;
+}
+
 .badge-security-guarded {
   background: #fef2f2;
   color: #991b1b;
@@ -1445,6 +1452,12 @@ body.dark-mode .badge-priority-p3 {
   background: #1f2937;
   color: #9ca3af;
   border-color: #4b5563;
+}
+
+body.dark-mode .badge-priority-p4 {
+  background: #064e3b;
+  color: #86efac;
+  border-color: #047857;
 }
 
 body.dark-mode .badge-security-guarded {

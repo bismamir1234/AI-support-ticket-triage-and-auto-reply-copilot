@@ -124,6 +124,14 @@ export async function approveTicket(ticketId, editedResponse = null) {
   );
 }
 
+export async function rejectTicket(ticketId) {
+  return safeFetch(
+    `${API_BASE}/${ticketId}/reject`,
+    { method: 'POST' },
+    `Failed to reject ticket ${ticketId}`
+  );
+}
+
 export async function resolveTicket(ticketId) {
   return safeFetch(
     `${API_BASE}/${ticketId}/resolve`,
@@ -149,6 +157,29 @@ export async function downloadExportCsv(filterParams = {}) {
   const a = document.createElement('a');
   a.href = downloadUrl;
   a.download = `tickets_export_${new Date().toISOString().slice(0, 10)}.csv`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(downloadUrl);
+}
+
+export async function downloadBatchLogCsv(filterParams = {}) {
+  const query = new URLSearchParams();
+  if (filterParams.category) query.append('category', filterParams.category);
+  if (filterParams.priority) query.append('priority', filterParams.priority);
+  if (filterParams.ticket_status) query.append('ticket_status', filterParams.ticket_status);
+  if (filterParams.approval_status) query.append('approval_status', filterParams.approval_status);
+
+  const url = `${API_BASE}/export/batch-csv${query.toString() ? `?${query.toString()}` : ''}`;
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error(`Failed to download Batch Log CSV: ${res.statusText}`);
+  }
+  const blob = await res.blob();
+  const downloadUrl = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = downloadUrl;
+  a.download = `batch_tickets_log_${new Date().toISOString().slice(0, 10)}.csv`;
   document.body.appendChild(a);
   a.click();
   a.remove();

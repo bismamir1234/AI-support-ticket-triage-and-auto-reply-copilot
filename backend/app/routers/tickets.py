@@ -201,9 +201,10 @@ def seed_samples_endpoint(db: Session = Depends(get_db)) -> List[TicketDBRespons
     "/export/csv",
     status_code=status.HTTP_200_OK,
     summary="Export tickets as CSV file download",
-    description="Generates a downloadable CSV with Ticket ID, Customer, Category, Priority, Sentiment, Missing entities, Status, and Final response.",
+    description="Generates a downloadable CSV with standard Phase 6 headers or comprehensive batch log headers.",
 )
 def export_tickets_csv_endpoint(
+    format: Optional[str] = Query("standard", description="CSV format: 'standard' or 'batch_log'"),
     category: Optional[str] = Query(None, description="Filter by category"),
     priority: Optional[str] = Query(None, description="Filter by priority"),
     ticket_status: Optional[str] = Query(None, description="Filter by ticket status"),
@@ -216,12 +217,45 @@ def export_tickets_csv_endpoint(
         priority=priority,
         ticket_status=ticket_status,
         approval_status=approval_status,
+        format_type=format,
+    )
+    filename = "batch_tickets_log.csv" if format in ["batch", "batch_log"] else "tickets_export.csv"
+    return Response(
+        content=csv_content,
+        media_type="text/csv",
+        headers={
+            "Content-Disposition": f'attachment; filename="{filename}"',
+            "Access-Control-Expose-Headers": "Content-Disposition",
+        },
+    )
+
+
+@router.get(
+    "/export/batch-csv",
+    status_code=status.HTTP_200_OK,
+    summary="Export batch ticket processing log CSV",
+    description="Generates a downloadable CSV with Ticket ID, Customer inquiry, Classification, Priority, Sentiment, Category, AI-generated response, Agent-edited response, Approval status, Timestamp.",
+)
+def export_batch_csv_endpoint(
+    category: Optional[str] = Query(None, description="Filter by category"),
+    priority: Optional[str] = Query(None, description="Filter by priority"),
+    ticket_status: Optional[str] = Query(None, description="Filter by ticket status"),
+    approval_status: Optional[str] = Query(None, description="Filter by approval status"),
+    db: Session = Depends(get_db),
+):
+    csv_content = ticket_db_service.export_tickets_csv(
+        db,
+        category=category,
+        priority=priority,
+        ticket_status=ticket_status,
+        approval_status=approval_status,
+        format_type="batch_log",
     )
     return Response(
         content=csv_content,
         media_type="text/csv",
         headers={
-            "Content-Disposition": 'attachment; filename="tickets_export.csv"',
+            "Content-Disposition": 'attachment; filename="batch_tickets_log.csv"',
             "Access-Control-Expose-Headers": "Content-Disposition",
         },
     )
@@ -274,6 +308,26 @@ def approve_ticket_endpoint(
 ) -> TicketApprovalResponse:
     edited_text = payload.edited_response if payload else None
     result = ticket_db_service.approve_ticket(db, ticket_id, edited_response=edited_text)
+    if not result:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=f"Ticket '{ticket_id}' not found.",
+        )
+    return result
+
+
+@router.post(
+    "/{ticket_id}/reject",
+    response_model=TicketDBResponse,
+    status_code=status.HTTP_200_OK,
+    summary="Reject response draft",
+    description="Records rejected approval status in SQLite, signaling that manual human handling is required.",
+)
+def reject_ticket_endpoint(
+    ticket_id: str,
+    db: Session = Depends(get_db),
+) -> TicketDBResponse:
+    result = ticket_db_service.reject_ticket(db, ticket_id)
     if not result:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

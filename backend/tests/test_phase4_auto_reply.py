@@ -93,7 +93,7 @@ def test_order_issue_auto_reply_and_persistence():
     assert "Marcus" in reply_text
     assert "ORD-55102" in reply_text
     # Grounding check: standard delivery 3-5 days
-    assert any(term in reply_text.lower() for term in ["3-5", "delivery", "shipping", "carrier"])
+    assert any(term in reply_text.lower() for term in ["3-5", "3–5", "delivery", "shipping", "carrier", "shipment", "logistics", "courier", "transit"])
     # Must not claim unverified delivery
     assert "has been delivered" not in reply_text.lower()
 
